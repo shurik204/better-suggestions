@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "me.shurik.bettersuggestions.mixin.client",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"ClientCommandSourceMixin",
+		"ClientConnectionMixin",
+		"EntityRendererMixin",
+		"MinecraftClientMixin",
+		"SuggestionMixin",
+		"SuggestionWindowMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

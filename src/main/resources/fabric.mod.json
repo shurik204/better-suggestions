@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "better-suggestions",
+	"version": "${version}",
+	"name": "Better Suggestions",
+	"description": "Makes Minecraft command suggestions more useful.",
+	"authors": [
+		"shurik204"
+	],
+	"contact": {
+		"homepage": "https://shurik.me/",
+		"sources": "https://github.com/shurik204/better-suggestions"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/better-suggestions/icon.png",
+	"environment": "*",
+	"accessWidener": "better-suggestions.accesswidener",
+	"entrypoints": {
+		"main": [
+			"me.shurik.bettersuggestions.BetterSuggestionsMod"
+		],
+		"client": [
+			"me.shurik.bettersuggestions.BetterSuggestionsModClient"
+		]
+	},
+	"mixins": [
+		"better-suggestions.mixins.json",
+		"better-suggestions.client.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14.17",
+		"minecraft": "~1.19.3",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"suggestion-tweaker": "*"
+	}
+}

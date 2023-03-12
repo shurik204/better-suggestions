@@ -1,0 +1,5 @@
+accessWidener	v1 named
+mutable field net/minecraft/command/argument/ScoreHolderArgumentType SUGGESTION_PROVIDER Lcom/mojang/brigadier/suggestion/SuggestionProvider;
+accessible field net/minecraft/client/gui/screen/ChatInputSuggestor color I
+mutable field net/minecraft/entity/Entity scoreboardTags Ljava/util/Set;
+accessible method net/minecraft/server/world/ServerWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;

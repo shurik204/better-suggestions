@@ -1,0 +1,24 @@
+package me.shurik.bettersuggestions.mixin.client;
+
+import static me.shurik.bettersuggestions.BetterSuggestionsModClient.CLIENT;
+
+import java.util.Collection;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import net.minecraft.client.network.ClientCommandSource;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+
+@Mixin(ClientCommandSource.class)
+public class ClientCommandSourceMixin {
+    // public Collection<String> getEntitySuggestions()
+    @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
+    private void getEntitySuggestions(CallbackInfoReturnable<Collection<String>> info) {
+        if (CLIENT.world != null) {
+            info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
+        }
+    }
+}
