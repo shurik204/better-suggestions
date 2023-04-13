@@ -48,9 +48,9 @@ public class TextCompletions {
     public static final List<String> EVENT_KEYS = Lists.newArrayList("action", "value");
     public static final List<String> SCORE_KEYS = Lists.newArrayList("name", "objective", "value");
     
-    public static final List<String> AUTOCOMPLETE_KEYS = KEYS.stream().map(key -> "\"" + key + "\":").toList();
-    public static final List<String> AUTOCOMPLETE_EVENT_KEYS = EVENT_KEYS.stream().map(key -> "\"" + key + "\":").toList();
-    public static final List<String> AUTOCOMPLETE_SCORE_KEYS = SCORE_KEYS.stream().map(key -> "\"" + key + "\":").toList();
+    public static final List<String> AUTOCOMPLETE_KEYS = KEYS.stream().map(key -> "\"" + key + "\"").toList();
+    public static final List<String> AUTOCOMPLETE_EVENT_KEYS = EVENT_KEYS.stream().map(key -> "\"" + key + "\"").toList();
+    public static final List<String> AUTOCOMPLETE_SCORE_KEYS = SCORE_KEYS.stream().map(key -> "\"" + key + "\"").toList();
 
     public static List<TextCompletion> keyCompletions(String input, String jsonPath, JsonObject jsonObject) {
         String[] path = jsonPath.split("\\.");
