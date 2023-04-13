@@ -8,7 +8,12 @@
 		"EntityRendererMixin",
 		"MinecraftClientMixin",
 		"SuggestionMixin",
-		"SuggestionWindowMixin"
+		"ArgumentTypeMixin",
+		"SuggestionWindowMixin",
+		"ChatInputSuggestorMixin",
+		"LanguageManagerMixin",
+		"ChatInputSuggestorAccessorMixin",
+		"TranslationStorageAccessorMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

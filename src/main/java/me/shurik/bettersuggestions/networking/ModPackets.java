@@ -4,15 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.shurik.bettersuggestions.BetterSuggestionsModClient;
-import me.shurik.bettersuggestions.access.SynchableEntityDataAccessor;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.impl.networking.client.ClientNetworkingImpl;
-import net.fabricmc.fabric.impl.networking.client.ClientPlayNetworkAddon;
-import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
@@ -32,8 +28,8 @@ public class ModPackets {
         public static void send(ServerPlayerEntity player, Entity entity) {
             PacketByteBuf buf = PacketByteBufs.create();
             buf.writeVarInt(entity.getId());
-            buf.writeVarInt(entity.getScoreboardTags().size());
-            for (String tag : entity.getScoreboardTags()) {
+            buf.writeVarInt(entity.getCommandTags().size());
+            for (String tag : entity.getCommandTags()) {
                 buf.writeString(tag);
             }
             ServerPlayNetworking.send(player, ID, buf);

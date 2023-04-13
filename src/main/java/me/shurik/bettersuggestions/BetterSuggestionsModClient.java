@@ -28,5 +28,9 @@ public class BetterSuggestionsModClient implements ClientModInitializer {
 		});
 
 		ModPackets.initClient();
+
+		// GuiRegistry registry = AutoConfig.getGuiRegistry(ConfigStore.class);
+		// GuiProvider
+		// registry.registerAnnotationProvider(, null);
 	}
 }

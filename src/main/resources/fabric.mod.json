@@ -21,6 +21,9 @@
 		],
 		"client": [
 			"me.shurik.bettersuggestions.BetterSuggestionsModClient"
+		],
+		"modmenu": [
+			"me.shurik.bettersuggestions.integration.ModMenuIntegration"
 		]
 	},
 	"mixins": [

@@ -23,27 +23,5 @@ public interface CommandSourceMixin {
             // serverCommandSource.getServer()
             info.setReturnValue(serverCommandSource.getWorld().getOtherEntities(null, serverCommandSource.getPlayer().getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
         }
-
-        // if (CLIENT.world != null) {
-            // Collection<String> suggestions = Lists.newArrayList();
-            // String crosshairTargetUuid = null;
-
-            // if (client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-            //     crosshairTargetUuid = ((EntityHitResult) client.crosshairTarget).getEntity().getUuidAsString();
-            // }
-
-            // if (crosshairTargetUuid != null) {
-            //     suggestions.add(crosshairTargetUuid);
-            //     // Needs to be final to be used in lambda
-            //     final String crosshairTargetUuidFinal = crosshairTargetUuid;
-            //     suggestions.addAll(client.world.getOtherEntities(null, client.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity) && !entity.getUuidAsString().equals(crosshairTargetUuidFinal)).stream().map(Entity::getEntityName).toList());
-            // } else {
-            //     suggestions.addAll(client.world.getOtherEntities(null, client.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
-            // }
-            
-            // info.setReturnValue(suggestions);
-
-            // info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
-        // }
     }
 }

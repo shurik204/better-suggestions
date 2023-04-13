@@ -9,6 +9,9 @@ import me.shurik.bettersuggestions.access.HighlightableEntityAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 
+/**
+ * Show outline for highlighted entities.
+ */
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
     @Inject(at = @At("HEAD"), method = "hasOutline", cancellable = true)

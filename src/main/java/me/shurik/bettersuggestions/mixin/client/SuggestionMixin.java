@@ -2,7 +2,6 @@ package me.shurik.bettersuggestions.mixin.client;
 
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.Message;
@@ -11,7 +10,6 @@ import com.mojang.brigadier.suggestion.Suggestion;
 
 import me.shurik.bettersuggestions.BetterSuggestionsModClient;
 import me.shurik.bettersuggestions.access.CustomSuggestionAccessor;
-import me.shurik.bettersuggestions.access.SynchableEntityDataAccessor;
 import me.shurik.bettersuggestions.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.StringUtils;
 import net.minecraft.entity.Entity;
@@ -28,7 +26,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-
+/**
+ * Add information to suggestion tooltip.
+ */
 @Mixin(Suggestion.class)
 public class SuggestionMixin implements CustomSuggestionAccessor {
     // @Final
@@ -50,16 +50,6 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "getText", cancellable = true, remap = false)
-    void getString(CallbackInfoReturnable<String> info) {
-        if (entitySuggestion) {
-            Entity entity = getEntity();
-            if (entity != null) {
-                info.setReturnValue(text + " (" + entity.getName().getString() + ")");
-            }
-        }
-    }
-
     public List<Text> getMultilineTooltip() {
         List<Text> tooltip = Lists.newArrayList();
         
@@ -69,7 +59,11 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
                 tooltip.add(Text.of(Registries.ENTITY_TYPE.getId(getEntity().getType()).toString()));
 
                 Set<String> tags = BetterSuggestionsModClient.ENTITY_TAGS.get(entity.getId());
-                tooltip.add(Text.translatable("Tags (%s): %s", tags.size(), tags.toString()));
+                tooltip.add(Text.translatable("text.suggestion.tooltip.entity_tags", tags.size(), tags.toString()));
+
+                if (entity.getVehicle() != null) {
+                    tooltip.add(Text.translatable("text.suggestion.tooltip.vehicle", entity.getVehicle().getName().getString()));
+                }
 
                 return tooltip;
             }

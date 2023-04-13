@@ -3,11 +3,11 @@
 	"package": "me.shurik.bettersuggestions.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"CommandSourceMixin",
 		"EntityOutlineMixin",
 		"EntityTagSyncMixin",
 		"EnttyTypeBuilderMixin",
-		"MarkerEntityMixin"
+		"MarkerEntityMixin",
+		"CommandSourceMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

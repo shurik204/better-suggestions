@@ -14,7 +14,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
@@ -23,6 +23,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RotationAxis;
 
+/**
+ * Render markers and area effect clouds as items.
+ */
 @Mixin(EntityRenderer.class)
 public class EntityRendererMixin<T extends Entity> {
     private ItemRenderer suggestions$itemRenderer;
@@ -60,8 +63,7 @@ public class EntityRendererMixin<T extends Entity> {
                 item = Items.LINGERING_POTION.getDefaultStack();
             }
 			
-
-			this.suggestions$itemRenderer.renderItem(item, ModelTransformation.Mode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getId());
+			this.suggestions$itemRenderer.renderItem(item, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.world, entity.getId());
 			matrices.pop();
         }
     }

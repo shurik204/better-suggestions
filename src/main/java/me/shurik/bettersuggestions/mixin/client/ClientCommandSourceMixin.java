@@ -12,11 +12,13 @@ import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
+/**
+ * Suggest nearby entities in selectors.
+ */
 @Mixin(ClientCommandSource.class)
 public class ClientCommandSourceMixin {
-    // public Collection<String> getEntitySuggestions()
     @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
-    private void getEntitySuggestions(CallbackInfoReturnable<Collection<String>> info) {
+    private void suggestNearbyEntities(CallbackInfoReturnable<Collection<String>> info) {
         if (CLIENT.world != null) {
             info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
         }
