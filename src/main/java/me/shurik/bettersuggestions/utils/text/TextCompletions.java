@@ -13,6 +13,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 
 public class TextCompletions {
     public record TextCompletion (String value) {}
@@ -140,15 +141,18 @@ public class TextCompletions {
         return matchingCompletions(input, TRANSLATION_CACHE);
     }
 
+    public static final List<String> KEYBIND_CACHE = Lists.newArrayList();
     public static List<TextCompletion> keybindCompletions(String input) {
-        if (!input.endsWith("\""))
-                return Lists.newArrayList(completions("\""));
-
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null) return Lists.newArrayList();
-        String trimmedInput = input.substring(0, input.length() - 1);
+
+        if (KEYBIND_CACHE.size() == 0) {
+            for (KeyBinding allKeys : client.options.allKeys) {
+                KEYBIND_CACHE.add("\"" + allKeys.getTranslationKey() + "\"");
+            }
+        }
         
-        return Lists.newArrayList(client.options.allKeys).stream().filter(key -> key.getTranslationKey().startsWith(trimmedInput)).map(key -> new TextCompletion(key.getTranslationKey() + "\"")).toList();
+        return matchingCompletions(input, KEYBIND_CACHE);
     }
 
     public static List<TextCompletion> blockCompletions(String input) {

@@ -17,7 +17,7 @@ public class ConfigStore implements ConfigData {
     public int maxSuggestionsShown = 12;
 
     @ConfigEntry.Gui.Tooltip(count = 2)
-    public boolean suggestEntitySelector = true;
+    public boolean suggestEntitySelector = false;
 
 
     // @ConfigEntry.ColorPicker

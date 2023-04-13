@@ -34,37 +34,5 @@ public class ScoreHolderArgumentTypeSuggestions {
                 return Suggestions.empty();
             }
         };
-        // ScoreHolderArgumentType.SUGGESTION_PROVIDER = (context, builder2) -> {
-        //     StringReader stringReader = new StringReader(builder2.getInput());
-        //     stringReader.setCursor(builder2.getStart());
-        //     EntitySelectorReader entitySelectorReader = new EntitySelectorReader(stringReader);
-        //     try {
-        //         entitySelectorReader.read();
-        //     } catch (CommandSyntaxException commandSyntaxException) {
-        //         // empty catch block
-        //     }
-        //     return entitySelectorReader.listSuggestions(builder2, (SuggestionsBuilder builder) -> CommandSource.suggestMatching(context.getSource().getEntitySuggestions(), builder));
-        // };
     }
-
-    // public static <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder2) {
-    //     S s = context.getSource();
-    //     if (s instanceof CommandSource) {
-    //         CommandSource commandSource = (CommandSource)s;
-    //         StringReader stringReader = new StringReader(builder2.getInput());
-    //         stringReader.setCursor(builder2.getStart());
-    //         EntitySelectorReader entitySelectorReader = new EntitySelectorReader(stringReader, commandSource.hasPermissionLevel(2));
-    //         try {
-    //             entitySelectorReader.read();
-    //         } catch (CommandSyntaxException commandSyntaxException) {
-    //             // empty catch block
-    //         }
-    //         return entitySelectorReader.listSuggestions(builder2, (SuggestionsBuilder builder) -> {
-    //             Collection<String> collection = commandSource.getPlayerNames();
-    //             Iterable<String> iterable = Iterables.concat(collection, commandSource.getEntitySuggestions());
-    //             CommandSource.suggestMatching(iterable, builder);
-    //         });
-    //     }
-    //     return Suggestions.empty();
-    // }
 }

@@ -37,10 +37,5 @@ public interface ArgumentTypeMixin {
         else if (argumentType instanceof UuidArgumentType) {
             info.setReturnValue(UuidArgumentSuggestions.listSuggestions(context, builder));
         }
-
-        // else if (argumentType instanceof ScoreHolderArgumentType) {
-        //     System.out.println("ScoreHolderArgumentType");
-        //     info.setReturnValue(ScoreHolderArgumentTypeSuggestions.listSuggestions(context, builder));
-        // }
     }
 }

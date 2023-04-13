@@ -21,11 +21,6 @@ public class StopParsingException extends RuntimeException {
         super("");
     }
 
-    // public StopParsingException(String reason, TextCompletion... suggestions) {
-    //     this.suggestions = CompletionsContainer.of(suggestions);
-    //     this.reason = reason;
-    // }
-
     public StopParsingException(String reason, List<TextCompletion> suggestions) {
         this.suggestions = CompletionsContainer.of(suggestions);
         this.reason = reason;
