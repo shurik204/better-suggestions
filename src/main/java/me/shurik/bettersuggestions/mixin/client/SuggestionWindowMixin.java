@@ -129,8 +129,9 @@ public class SuggestionWindowMixin {
      * @author shurik204
      * @reason There's a better way to do this by injecting near the `boolean bl5 = false;` line, but I counldn't get it to work.
      */
-    @Overwrite
-    public void render(MatrixStack matrices, int mouseX, int mouseY) {
+    // @Overwrite
+    @Inject(at = @At("HEAD"), method = "render", cancellable = true)
+    public void render(MatrixStack matrices, int mouseX, int mouseY, CallbackInfo info) {
         int i = Math.min(this.suggestions.size(), maxSuggestionsShown);
         boolean renderTopScrollIndicator = this.inWindowIndex > 0;
         boolean renderBottomScrollIndicator = this.suggestions.size() > this.inWindowIndex + i;
@@ -203,6 +204,8 @@ public class SuggestionWindowMixin {
                 }
             }
         }
+
+        info.cancel();
     }
 
     //public boolean keyPressed(int keyCode, int scanCode, int modifiers)
