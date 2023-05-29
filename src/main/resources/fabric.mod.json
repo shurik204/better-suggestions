@@ -11,7 +11,7 @@
 		"homepage": "https://shurik.me/",
 		"sources": "https://github.com/shurik204/better-suggestions"
 	},
-	"license": "CC0-1.0",
+	"license": "GPL-3.0",
 	"icon": "assets/better-suggestions/icon.png",
 	"environment": "*",
 	"accessWidener": "better-suggestions.accesswidener",
