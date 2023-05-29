@@ -55,9 +55,11 @@ public class TextCompletions {
 
     public static List<TextCompletion> keyCompletions(String input, String jsonPath, JsonObject jsonObject) {
         String[] path = jsonPath.split("\\.");
-        if (path[path.length - 1].equals("score") || (path.length > 1 && path[path.length - 2].equals("score"))) {
+        // Only suggest keys if the last character is a dot
+        if ((path[path.length - 1].equals("score") && jsonPath.endsWith(".")) || (path.length > 1 && path[path.length - 2].equals("score"))) {
             return matchingCompletions(input, AUTOCOMPLETE_SCORE_KEYS, jsonObject.keySet());
-        } else if (path[path.length - 1].equals("clickevent") || path[path.length - 1].equals("hoverevent") 
+        } else if (
+            ((path[path.length - 1].equals("clickevent") || path[path.length - 1].equals("hoverevent")) && jsonPath.endsWith("."))
             || (path.length > 1 && (path[path.length - 2].equals("clickevent") || path[path.length - 2].equals("hoverevent")))) {
             return matchingCompletions(input, AUTOCOMPLETE_EVENT_KEYS, jsonObject.keySet());
         } else {
