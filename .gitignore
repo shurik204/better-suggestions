@@ -39,4 +39,7 @@ replay_*.log
 *.hprof
 *.jfr
 
+# custom
+
+/resources/
 NOTES
