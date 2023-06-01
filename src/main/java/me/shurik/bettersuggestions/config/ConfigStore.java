@@ -19,6 +19,8 @@ public class ConfigStore implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean suggestEntitySelector = false;
 
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
+    public int entitySuggestionRadius = 10;
 
     // @ConfigEntry.ColorPicker
     // public int chatSuggestionsColor = -805306368;

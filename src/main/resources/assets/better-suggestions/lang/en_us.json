@@ -4,6 +4,7 @@
 
     "text.autoconfig.better-suggestions.title": "Better Suggestions Config",
     "text.autoconfig.better-suggestions.option.maxSuggestionsShown": "How many suggestions to show",
+    "text.autoconfig.better-suggestions.option.entitySuggestionRadius": "Entity suggestion search radius",
     "text.autoconfig.better-suggestions.option.suggestEntitySelector": "Suggest entity selector when looking at an entity",
     "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[0]": "Suggest @e[type=ENTITY_TYPE,limit=1,sort=nearest] entity",
     "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[1]": "selector when looking at an entity",

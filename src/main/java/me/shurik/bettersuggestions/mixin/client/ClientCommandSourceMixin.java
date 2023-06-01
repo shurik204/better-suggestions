@@ -1,5 +1,6 @@
 package me.shurik.bettersuggestions.mixin.client;
 
+import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
 import static me.shurik.bettersuggestions.BetterSuggestionsModClient.CLIENT;
 
 import java.util.Collection;
@@ -20,7 +21,7 @@ public class ClientCommandSourceMixin {
     @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
     private void suggestNearbyEntities(CallbackInfoReturnable<Collection<String>> info) {
         if (CLIENT.world != null) {
-            info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(10), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
+            info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(CONFIG.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
         }
     }
 }
