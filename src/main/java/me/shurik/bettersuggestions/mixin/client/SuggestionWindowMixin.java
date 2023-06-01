@@ -1,14 +1,12 @@
 package me.shurik.bettersuggestions.mixin.client;
 
 import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
-import static me.shurik.bettersuggestions.BetterSuggestionsModClient.CLIENT;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,10 +27,10 @@ import me.shurik.bettersuggestions.access.HighlightableEntityAccessor;
 import me.shurik.bettersuggestions.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.RegistryUtils;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ChatInputSuggestor;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ChatInputSuggestor.SuggestionWindow;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Rect2i;
 import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
@@ -67,8 +65,13 @@ public class SuggestionWindowMixin {
     @Shadow
     private boolean completed;
 
+    private TextRenderer suggestions$textRenderer;
+
     @Inject(at = @At("TAIL"), method = "<init>")
     void init(ChatInputSuggestor suggestor, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion, CallbackInfo info) {
+        ChatInputSuggestorAccessorMixin suggestorAccessor = (ChatInputSuggestorAccessorMixin) suggestor;
+        this.suggestions$textRenderer = suggestorAccessor.getTextRenderer();
+        
         // TODO: add color customization for chat and cmd block input
         // suggestor.owner instanceof ChatScreen and suggestor.owner instanceof AbstractCommandBlockScreen
         // if (suggestorAccessor.getOwner() instanceof ChatScreen) {
@@ -82,7 +85,7 @@ public class SuggestionWindowMixin {
         ArrayList<Suggestion> prioritizedSuggestions = new ArrayList<Suggestion>();
         ArrayList<Suggestion> otherSuggestions = new ArrayList<Suggestion>();
 
-        int inputLength = ((ChatInputSuggestorAccessorMixin) suggestor).getTextField().getText().length();
+        int inputLength = suggestorAccessor.getTextField().getText().length();
         
         Entity crosshairTarget = ClientUtils.getCrosshairTargetEntity();
         String crosshairTargetUuid = crosshairTarget != null ? crosshairTarget.getUuidAsString() : null;
@@ -133,7 +136,7 @@ public class SuggestionWindowMixin {
     private boolean renderShiftTooltip;
     // HEAD
     @Inject(method = "render", at = @At("HEAD"))
-    void renderPrepare(MatrixStack matrices, int mouseX, int mouseY, CallbackInfo info) {
+    void renderPrepare(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
         renderShiftTooltip = true;
         customCurrentSuggestion = null;
     }
@@ -145,11 +148,11 @@ public class SuggestionWindowMixin {
         return suggestion;
     }
 
-    // ChatInputSuggestor.this.textRenderer.drawWithShadow(matrices, suggestion.getText()
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Ljava/lang/String;FFI)I", ordinal = 0))
-    int drawFormattedTextWithShadow(TextRenderer textRenderer, MatrixStack matrices, String __, float x, float y, int color) {
+    // context.drawTextWithShadow(ChatInputSuggestor.this.textRenderer, suggestion.getText() ...
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", ordinal = 0))
+    int drawFormattedTextWithShadow(DrawContext context, TextRenderer textRenderer, String __, int x, int y, int color) {
         // Draw as multiline tooltip instead
-        return textRenderer.drawWithShadow(matrices, customCurrentSuggestion.getFormattedText(), x, y, color);
+        return context.drawTextWithShadow(textRenderer, customCurrentSuggestion.getFormattedText(), x, y, color);
     }
 
     //                                                                           \/
@@ -165,27 +168,27 @@ public class SuggestionWindowMixin {
         }
     }
 
-
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/Text;II)V"))
-    void renderMouseTooltip(Screen screen, MatrixStack matrices, Text text, int x, int y) {
+    // context.drawTooltip(ChatInputSuggestor.this.textRenderer, Texts.toText(message), mouseX, mouseY);
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTooltip(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;II)V"))
+    void renderMouseTooltip(DrawContext context, TextRenderer textRenderer, Text text, int x, int y) {
         // Render custom tooltip
         CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
         List<Text> tooltip = customSuggestion.getMultilineTooltip();
         if (tooltip != null) {
-            CLIENT.currentScreen.renderTooltip(matrices, tooltip, x, y);
+            context.drawTooltip(textRenderer, tooltip, x, y);
         }
         renderShiftTooltip = false;
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    void renderFinish(MatrixStack matrices, int mouseX, int mouseY, CallbackInfo info) {
+    void renderFinish(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
         // Render shift tooltip
         if (renderShiftTooltip && Screen.hasShiftDown()) {
             CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
             List<Text> tooltip = customSuggestion.getMultilineTooltip();
             if (tooltip != null) {
                 //                                                                                                         get suggestion index in for loop
-                CLIENT.currentScreen.renderTooltip(matrices, tooltip, this.area.getX() - 5, this.area.getY() + 2 + 12 * ((this.selection - this.inWindowIndex) - tooltip.size() + 1));
+                context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, this.area.getY() + 2 + 12 * ((this.selection - this.inWindowIndex) - tooltip.size() + 1));
             }
         }
 

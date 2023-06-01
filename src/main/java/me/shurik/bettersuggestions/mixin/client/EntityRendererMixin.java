@@ -63,7 +63,7 @@ public class EntityRendererMixin<T extends Entity> {
                 item = Items.LINGERING_POTION.getDefaultStack();
             }
 			
-			this.suggestions$itemRenderer.renderItem(item, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.world, entity.getId());
+			this.suggestions$itemRenderer.renderItem(item, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), entity.getId());
 			matrices.pop();
         }
     }
