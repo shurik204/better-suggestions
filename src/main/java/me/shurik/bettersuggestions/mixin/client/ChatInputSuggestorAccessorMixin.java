@@ -17,4 +17,7 @@ public interface ChatInputSuggestorAccessorMixin {
 
     @Accessor
     TextFieldWidget getTextField();
+
+    @Accessor
+    void setMaxSuggestionSize(int maxSuggestionSize);
 }

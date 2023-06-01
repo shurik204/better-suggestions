@@ -3,3 +3,4 @@ mutable field net/minecraft/command/argument/ScoreHolderArgumentType SUGGESTION_
 accessible field net/minecraft/client/gui/screen/ChatInputSuggestor color I
 mutable field net/minecraft/entity/Entity commandTags Ljava/util/Set;
 accessible method net/minecraft/server/world/ServerWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
+mutable field net/minecraft/client/gui/screen/ChatInputSuggestor maxSuggestionSize I
