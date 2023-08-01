@@ -50,7 +50,7 @@ public class EntityRendererMixin<T extends Entity> {
     // public void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
-        if ((entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity) && ((HighlightableEntityAccessor)entity).isHighlighted()) {
+        if ((entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity || entity instanceof InteractionEntity) && ((HighlightableEntityAccessor)entity).isHighlighted()) {
             ItemStack item;
             matrices.push();
             matrices.multiply(this.suggestions$dispatcher.getRotation());
@@ -58,7 +58,11 @@ public class EntityRendererMixin<T extends Entity> {
             if (entity instanceof MarkerEntity) {
                 matrices.scale(1F, 1F, 1F);
                 item = Items.STRUCTURE_VOID.getDefaultStack();
-            } else {
+            } 
+	    if (entity instanceof InteractionEntity){
+		matricies.scale(1F, 1F, 1F);
+		item = Items.FISHING_ROD.getDefaultStakc
+	    else {
                 matrices.scale(1F, 1F, 1F);
                 item = Items.LINGERING_POTION.getDefaultStack();
             }
