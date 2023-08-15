@@ -36,8 +36,6 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-	modImplementation files("malilib-fabric-1.20.1-0.16.1.jar")
-	
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
 
