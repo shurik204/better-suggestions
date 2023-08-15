@@ -7,6 +7,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import net.minecraft.client.resource.language.TranslationStorage;
 
+/**
+ * Accessor for {@link TranslationStorage} to get the translations map.
+ */
 @Mixin(TranslationStorage.class)
 public interface TranslationStorageAccessorMixin {
     @Accessor

@@ -9,6 +9,9 @@ import me.shurik.bettersuggestions.utils.text.TextCompletions;
 import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.resource.ResourceManager;
 
+/**
+ * Clear translation cache when the language manager reloads.
+ */
 @Mixin(LanguageManager.class)
 public class LanguageManagerMixin {
     // public void reload(ResourceManager manager)

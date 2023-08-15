@@ -24,11 +24,7 @@ public class BetterSuggestionsMod implements ModInitializer {
 		ScoreHolderArgumentTypeSuggestions.init();
 		ModPackets.init();
 		ServerEvents.init();
-
-		// CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-		// 	NoopCommand.register(dispatcher);
-		// });
-
+		
 		LOGGER.info("Suggestions!");
 	}
 
