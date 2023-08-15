@@ -31,7 +31,6 @@ public class EntityRendererMixin<T extends Entity> {
     private ItemRenderer suggestions$itemRenderer;
     private EntityRenderDispatcher suggestions$dispatcher;
     
-
     // constructor
     @Inject(method = "<init>", at = @At("RETURN"))
     void constructor(EntityRendererFactory.Context ctx, CallbackInfo info) {
@@ -48,23 +47,22 @@ public class EntityRendererMixin<T extends Entity> {
     }
 
     // public void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "render", at = @At("HEAD"))
     void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
         if ((entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity) && ((HighlightableEntityAccessor)entity).isHighlighted()) {
-            ItemStack item;
-            matrices.push();
-            matrices.multiply(this.suggestions$dispatcher.getRotation());
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
             if (entity instanceof MarkerEntity) {
-                matrices.scale(1F, 1F, 1F);
-                item = Items.STRUCTURE_VOID.getDefaultStack();
+                renderItem(Items.STRUCTURE_VOID.getDefaultStack(), light, matrices, vertexConsumers, entity);
             } else {
-                matrices.scale(1F, 1F, 1F);
-                item = Items.LINGERING_POTION.getDefaultStack();
+                renderItem(Items.LINGERING_POTION.getDefaultStack(), light, matrices, vertexConsumers, entity);
             }
-			
-			this.suggestions$itemRenderer.renderItem(item, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.world, entity.getId());
-			matrices.pop();
         }
+    }
+
+    private void renderItem(ItemStack item, int light, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity) {
+        matrices.push();
+        matrices.multiply(this.suggestions$dispatcher.getRotation());
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+        this.suggestions$itemRenderer.renderItem(item, ModelTransformationMode.GROUND, light, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), entity.getId());
+        matrices.pop();
     }
 }

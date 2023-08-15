@@ -36,7 +36,7 @@ public class ModPackets {
         }
 
         public static void broadcastFromEntity(Entity entity) {
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) entity.world, entity.getBlockPos())) {
+            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) entity.getWorld(), entity.getBlockPos())) {
                 EntityTagsUpdateS2CPacket.send(player, entity);
             }
         }

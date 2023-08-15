@@ -22,8 +22,6 @@ import net.minecraft.command.argument.UuidArgumentType;
  */
 @Mixin(ArgumentType.class)
 public interface ArgumentTypeMixin {
-    
-
     // default <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder)
     @Inject(at = @At("HEAD"), method = "listSuggestions", cancellable = true, remap = false)
     default <S> void listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder, CallbackInfoReturnable<CompletableFuture<Suggestions>> info) {
