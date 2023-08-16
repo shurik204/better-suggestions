@@ -1,5 +1,6 @@
 {
     "text.suggestion.tooltip.entity_tags": "Tags (%s): %s",
+    "text.suggestion.tooltip.loading_tags": "Fetching tags from server...",
     "text.suggestion.tooltip.vehicle": "Riding: %s",
 
     "text.autoconfig.better-suggestions.title": "Better Suggestions Config",

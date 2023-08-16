@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -21,7 +22,7 @@ public class ModPackets {
     public class EntityTagsUpdateS2CPacket {
         public static final Identifier ID = new Identifier("bettersuggestions", "entity_tags_update");
 
-        public static void register() {
+        protected static void register() {
             ClientPlayNetworking.registerGlobalReceiver(ID, EntityTagsUpdateS2CPacket::handle);
         }
 
@@ -41,7 +42,7 @@ public class ModPackets {
             }
         }
 
-        public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+        private static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
             int entityId = buf.readVarInt();
             int tagCount = buf.readVarInt();
             Set<String> tags = new HashSet<>();
@@ -53,11 +54,31 @@ public class ModPackets {
         }
     }
 
+    public class ModPresenceS2CPacket {
+        public static final Identifier ID = new Identifier("bettersuggestions", "mod_presence");
+
+        protected static void register() {
+            ClientPlayNetworking.registerGlobalReceiver(ID, ModPresenceS2CPacket::handle);
+        }
+
+        public static void send(ServerPlayerEntity player) {
+            ServerPlayNetworking.send(player, ID, PacketByteBufs.empty());
+        }
+
+        private static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+            BetterSuggestionsModClient.MOD_PRESENT_ON_SERVER = true;
+        }
+    }
+
     public static void init() {
-        
+        // Send mod presence packet to client on join
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            ModPresenceS2CPacket.send(handler.player);
+        });
     }
 
     public static void initClient() {
         EntityTagsUpdateS2CPacket.register();
+        ModPresenceS2CPacket.register();
     }
 }

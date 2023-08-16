@@ -11,6 +11,7 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import me.shurik.bettersuggestions.BetterSuggestionsModClient;
 import me.shurik.bettersuggestions.access.CustomSuggestionAccessor;
 import me.shurik.bettersuggestions.utils.ClientUtils;
+import me.shurik.bettersuggestions.utils.FallbackTagGetter;
 import me.shurik.bettersuggestions.utils.StringUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
@@ -58,8 +59,18 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
             if (entity != null) {
                 tooltip.add(Text.of(Registries.ENTITY_TYPE.getId(getEntity().getType()).toString()));
 
+                // Try to request tags periodically if the mod is not present on server
+                if (!BetterSuggestionsModClient.MOD_PRESENT_ON_SERVER) {
+                    FallbackTagGetter.tryRequestEntityTags(entity);
+                }
+
                 Set<String> tags = BetterSuggestionsModClient.ENTITY_TAGS.get(entity.getId());
-                tooltip.add(Text.translatable("text.suggestion.tooltip.entity_tags", tags.size(), tags.toString()));
+
+                if (tags != null)
+                    tooltip.add(Text.translatable("text.suggestion.tooltip.entity_tags", tags.size(), tags.toString()));
+                else {
+                    tooltip.add(Text.translatable("text.suggestion.tooltip.loading_tags"));
+                }
 
                 if (entity.getVehicle() != null) {
                     tooltip.add(Text.translatable("text.suggestion.tooltip.vehicle", entity.getVehicle().getName().getString()));

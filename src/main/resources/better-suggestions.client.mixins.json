@@ -13,7 +13,8 @@
 		"ChatInputSuggestorMixin",
 		"LanguageManagerMixin",
 		"ChatInputSuggestorAccessorMixin",
-		"TranslationStorageAccessorMixin"
+		"TranslationStorageAccessorMixin",
+		"ClientPlayNetworkHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
