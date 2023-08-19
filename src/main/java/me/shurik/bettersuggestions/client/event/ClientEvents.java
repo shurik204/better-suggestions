@@ -30,9 +30,7 @@ public class ClientEvents {
         // Clear entity highlight information after rendering
         WorldRenderEvents.LAST.register((worldrendercontext) -> {
             if (client.world != null) {
-                client.world.getEntities().forEach((entity) -> {
-                    ((HighlightableEntityAccessor) entity).setHighlighted(false);
-                });
+                client.world.getEntities().forEach((entity) -> ((HighlightableEntityAccessor) entity).setHighlighted(false));
             }
         });
 

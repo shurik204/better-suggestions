@@ -1,10 +1,22 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mojang.brigadier.LiteralMessage;
+import com.mojang.brigadier.Message;
+import com.mojang.brigadier.context.StringRange;
+import com.mojang.brigadier.suggestion.Suggestion;
+import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
+import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.utils.ClientUtils;
+import me.shurik.bettersuggestions.utils.RegistryUtils;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ChatInputSuggestor;
+import net.minecraft.client.gui.screen.ChatInputSuggestor.SuggestionWindow;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.Rect2i;
+import net.minecraft.entity.Entity;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -17,25 +29,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.mojang.brigadier.LiteralMessage;
-import com.mojang.brigadier.Message;
-import com.mojang.brigadier.context.StringRange;
-import com.mojang.brigadier.suggestion.Suggestion;
 
-import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
-import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
-import me.shurik.bettersuggestions.client.utils.ClientUtils;
-import me.shurik.bettersuggestions.utils.RegistryUtils;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ChatInputSuggestor;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ChatInputSuggestor.SuggestionWindow;
-import net.minecraft.client.util.math.Rect2i;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
+import java.util.ArrayList;
+import java.util.List;
+
+import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
 
 /**
  * Render tooltip while holding shift
@@ -47,9 +45,6 @@ import net.minecraft.util.math.Vec2f;
 public class SuggestionWindowMixin {
     @Shadow
     private int inWindowIndex;
-
-    @Shadow
-    private Vec2f mouse;
 
     @Shadow
     @Final
@@ -82,8 +77,8 @@ public class SuggestionWindowMixin {
         //     this.color = 0xFFFFFF;
         // }
         
-        ArrayList<Suggestion> prioritizedSuggestions = new ArrayList<Suggestion>();
-        ArrayList<Suggestion> otherSuggestions = new ArrayList<Suggestion>();
+        ArrayList<Suggestion> prioritizedSuggestions = new ArrayList<>();
+        ArrayList<Suggestion> otherSuggestions = new ArrayList<>();
 
         int inputLength = suggestorAccessor.getTextField().getText().length();
         
@@ -91,10 +86,9 @@ public class SuggestionWindowMixin {
         String crosshairTargetUuid = crosshairTarget != null ? crosshairTarget.getUuidAsString() : null;
         
         // Sort all entity UUIDs to be displayed first
-        for (int i = 0; i < suggestions.size(); i++) {
-            Suggestion suggestion = suggestions.get(i);
+        for (Suggestion suggestion : suggestions) {
             CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor) suggestion;
-            
+
             // Prioritize config entries
             // Only if there is some input text
             if (inputLength != suggestion.getRange().getStart() && CONFIG.prioritizedSuggestions.contains(suggestion.getText())) {
@@ -103,7 +97,7 @@ public class SuggestionWindowMixin {
             // then entity UUIDs
             // (with the exception of the crosshair target, it will always be put first)
             else if (customSuggestion.isEntitySuggestion()) {
-                
+
                 // If the crosshair target exists and is the same as the suggestion, put it as first
                 if (crosshairTargetUuid != null && crosshairTargetUuid.equals(customSuggestion.getOriginalText())) {
                     prioritizedSuggestions.add(0, suggestion);
@@ -142,7 +136,7 @@ public class SuggestionWindowMixin {
     }
 
     // Suggestion suggestion = this.suggestions.get(renderIndex + this.inWindowIndex);
-    @ModifyVariable(at = @At("STORE"), method = "render", ordinal = 0)
+    @ModifyVariable(at = @At(value = "STORE"), method = "render", ordinal = 0)
     public Suggestion captureSuggestion(Suggestion suggestion) {
         customCurrentSuggestion = (CustomSuggestionAccessor) suggestion;
         return suggestion;
@@ -160,7 +154,7 @@ public class SuggestionWindowMixin {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/suggestion/Suggestion;getTooltip()Lcom/mojang/brigadier/Message;", ordinal = 0, remap = false))
     Message ifBlockTooltipManipulation(Suggestion suggestion) {
         // If there's custom tooltip, return placeholder to make sure the if block succeeds
-        if (((CustomSuggestionAccessor)suggestion).getMultilineTooltip().size() != 0) {
+        if (!((CustomSuggestionAccessor) suggestion).getMultilineTooltip().isEmpty()) {
             return new LiteralMessage("placeholder");
         } else {
             // Otherwise, return the original tooltip
@@ -223,5 +217,5 @@ public class SuggestionWindowMixin {
     public void select(int index) {}
 
     @Shadow
-    public void scroll(int offset) {};
+    public void scroll(int offset) {}
 }

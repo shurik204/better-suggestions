@@ -18,7 +18,7 @@ public class EntityTypeBuilderMixin<T extends Entity> {
     @Shadow
     private int maxTrackingRange;
     
-    @Inject(at = @At("TAIL"), method = "maxTrackingRange", cancellable = true)
+    @Inject(at = @At("TAIL"), method = "maxTrackingRange")
     public void maxTrackingRange(int maxTrackRange, CallbackInfoReturnable<EntityType.Builder<?>> info) {
         if (maxTrackRange == 0 && dimensions.width == 0.0F && dimensions.height == 0.0F) {
             maxTrackingRange = 6;

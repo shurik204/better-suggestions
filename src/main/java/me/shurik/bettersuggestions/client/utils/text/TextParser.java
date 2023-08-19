@@ -1,21 +1,15 @@
 package me.shurik.bettersuggestions.client.utils.text;
 
-import java.io.EOFException;
-import java.io.IOException;
-
+import com.google.gson.*;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import me.shurik.bettersuggestions.client.utils.CompletionsContainer;
+import me.shurik.bettersuggestions.client.utils.text.TextCompletions.TextCompletion;
+import me.shurik.bettersuggestions.utils.CustomJsonReader;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
-import me.shurik.bettersuggestions.client.utils.CompletionsContainer;
-import me.shurik.bettersuggestions.utils.CustomJsonReader;
-import me.shurik.bettersuggestions.client.utils.text.TextCompletions.TextCompletion;
-import net.minecraft.text.Text;
+import java.io.EOFException;
+import java.io.IOException;
 
 public class TextParser {
     @Nullable
@@ -23,7 +17,7 @@ public class TextParser {
         try {
             Text.Serializer.fromJson(builder.getInput().substring(builder.getStart()));
             return null;
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
 
         // net.minecraft.client.MinecraftClient client = net.minecraft.client.MinecraftClient.getInstance();
@@ -60,7 +54,7 @@ public class TextParser {
         }
     }
 
-    public static JsonElement readString(CustomJsonReader reader) throws IOException {
+    public static JsonElement readString(CustomJsonReader reader) {
         // System.out.println("readString");
         try {
             String string = reader.nextString();
@@ -158,7 +152,7 @@ public class TextParser {
         return jsonArray;
     }
 
-    public static JsonPrimitive readBoolean(CustomJsonReader reader) throws IOException {
+    public static JsonPrimitive readBoolean(CustomJsonReader reader) {
         // System.out.println("readBoolean");
 
         try {
@@ -175,7 +169,7 @@ public class TextParser {
         }
     }
 
-    public static JsonPrimitive readNumber(CustomJsonReader reader) throws IOException {
+    public static JsonPrimitive readNumber(CustomJsonReader reader) {
         // System.out.println("readNumber");
         try {
             return new JsonPrimitive(reader.nextDouble());
@@ -186,22 +180,17 @@ public class TextParser {
 
     public static JsonElement readSomeValue(CustomJsonReader reader) throws IOException {
         // System.out.println("readSomeValue");
-        switch (reader.peek()) {
-            case STRING:
-                return readString(reader);
-            case BEGIN_OBJECT:
-                return readObject(reader);
-            case BEGIN_ARRAY:
-                return readArray(reader);
-            case NUMBER:
-                return readNumber(reader);
-            case BOOLEAN:
-                return readBoolean(reader);
-            case NULL:
+        return switch (reader.peek()) {
+            case STRING -> readString(reader);
+            case BEGIN_OBJECT -> readObject(reader);
+            case BEGIN_ARRAY -> readArray(reader);
+            case NUMBER -> readNumber(reader);
+            case BOOLEAN -> readBoolean(reader);
+            case NULL -> {
                 reader.nextNull();
-                return JsonNull.INSTANCE;
-            default:
-                throw new StopParsingException();
-        }
+                yield JsonNull.INSTANCE;
+            }
+            default -> throw new StopParsingException();
+        };
     }
 }

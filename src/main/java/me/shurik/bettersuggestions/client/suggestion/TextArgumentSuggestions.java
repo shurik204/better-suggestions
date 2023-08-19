@@ -1,18 +1,13 @@
 package me.shurik.bettersuggestions.client.suggestion;
 
-import java.util.concurrent.CompletableFuture;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
 import me.shurik.bettersuggestions.client.utils.CompletionsContainer;
-import me.shurik.bettersuggestions.client.utils.text.TextParser;
 import me.shurik.bettersuggestions.client.utils.text.TextCompletions.TextCompletion;
+import me.shurik.bettersuggestions.client.utils.text.TextParser;
+
+import java.util.concurrent.CompletableFuture;
 
 public class TextArgumentSuggestions {
     public static void suggest(SuggestionsBuilder builder, String value) {
@@ -48,32 +43,5 @@ public class TextArgumentSuggestions {
         }
         
         return builder.buildFuture();
-    }
-
-    public static void parseJson(String input) {
-        JsonElement element = JsonParser.parseString(input);
-
-        if (element.isJsonArray()) {
-            parseArray(element.getAsJsonArray());
-        }
-
-        if (element.isJsonObject()) {
-            parseObject(element.getAsJsonObject());
-        }
-    }
-
-    public static void parseArray(JsonArray array) {
-        for (JsonElement e : array) {
-            if (e.isJsonArray()) {
-                parseArray(e.getAsJsonArray());
-            } else if (e.isJsonObject()) {
-                parseObject(e.getAsJsonObject());
-            }
-
-
-        }
-    }
-
-    private static void parseObject(JsonObject asJsonObject) {
     }
 }

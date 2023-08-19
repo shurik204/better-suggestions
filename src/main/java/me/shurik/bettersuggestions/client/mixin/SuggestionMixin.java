@@ -1,13 +1,9 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
-
 import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
 import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
 import me.shurik.bettersuggestions.client.utils.ClientUtils;
@@ -17,28 +13,26 @@ import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Uuids;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
 
 /**
  * Add information to suggestion tooltip.
  */
 @Mixin(Suggestion.class)
 public class SuggestionMixin implements CustomSuggestionAccessor {
-    // @Final
+    @Final
     @Shadow(remap = false)
     private String text;
-
-    // @Final
-    @Shadow(remap = false)
-    private Message tooltip;
 
     private boolean entitySuggestion = false;
     private Entity suggestions$entity;

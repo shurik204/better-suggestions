@@ -1,19 +1,18 @@
 package me.shurik.bettersuggestions.client.utils.text;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
-
 import me.shurik.bettersuggestions.client.mixin.TranslationStorageAccessorMixin;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.Language;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.KeyBinding;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 public class TextCompletions {
     public record TextCompletion (String value) {}
@@ -23,26 +22,26 @@ public class TextCompletions {
     }
 
     public static List<TextCompletion> matchingCompletions(String input, String... values) {
-        return Arrays.stream(values).filter(value -> value.startsWith(input)).map(value -> new TextCompletion(value)).toList();
+        return Arrays.stream(values).filter(value -> value.startsWith(input)).map(TextCompletion::new).toList();
     }
 
     public static List<TextCompletion> matchingCompletions(String input, List<String> values) {
-        return values.stream().filter(value -> value.startsWith(input)).map(value -> new TextCompletion(value)).toList();
+        return values.stream().filter(value -> value.startsWith(input)).map(TextCompletion::new).toList();
     }
     
     public static List<TextCompletion> matchingWithQuoteCompletions(String input, String... values) {
-        return Arrays.stream(values).filter(value -> value.substring(1).startsWith(input)).map(value -> new TextCompletion(value)).toList();
+        return Arrays.stream(values).filter(value -> value.substring(1).startsWith(input)).map(TextCompletion::new).toList();
     }
 
     public static List<TextCompletion> matchingWithQuoteCompletions(String input, List<String> values) {
-        return values.stream().filter(value -> value.substring(1).startsWith(input)).map(value -> new TextCompletion(value)).toList();
+        return values.stream().filter(value -> value.substring(1).startsWith(input)).map(TextCompletion::new).toList();
     }
 
     public static List<TextCompletion> matchingCompletions(String input, List<String> values, Set<String> exclude) {
         // TODO: Doesn't work
         List<String> filtered = Lists.newArrayList(values);
         filtered.removeAll(exclude);
-        return filtered.stream().filter(value -> (value.startsWith(input))).map(value -> new TextCompletion(value)).toList();
+        return filtered.stream().filter(value -> (value.startsWith(input))).map(TextCompletion::new).toList();
     }
 
     public static final List<String> KEYS = Lists.newArrayList("text", "color", "bold", "italic", "underlined", "strikethrough", "obfuscated", "insertion", "clickEvent", "hoverEvent", "extra", "nbt", "storage", "entity", "block", "translate", "with", "score", "selector", "keybind", "font", "interpret");
@@ -74,37 +73,42 @@ public class TextCompletions {
         if (input.isEmpty() && (key.equals("score") || key.equals("clickevent") || key.equals("hoverevent")))
             return completions("{");
 
-        if (key.equals("color")) {
-            if (!input.endsWith("\""))
-                return completions("\"");
-
-            input = input.substring(0, input.length() - 1);
-            return colorCompletions(input);
-        } else if (key.equals("action")) {
-            if (!input.endsWith("\""))
-                return completions("\"");
-            
-            String[] path = jsonPath.split("\\.");
-            
-            if (path[path.length - 2].equals("clickevent")) {
+        switch (key) {
+            case "color" -> {
+                if (!input.endsWith("\""))
+                    return completions("\"");
                 input = input.substring(0, input.length() - 1);
-                return clickActionCompletions(input);
-            } else if (path[path.length - 2].equals("hoverevent")) {
-                input = input.substring(0, input.length() - 1);
-                return hoverActionCompletions(input);
-            } else {
-                return Lists.newArrayList();
+                return colorCompletions(input);
             }
-        } else if (key.equals("bold") || key.equals("italic") || key.equals("underlined") || key.equals("strikethrough") || key.equals("obfuscated") || key.equals("interpret")) {
-            return booleanCompletions(input);
-        } else if (key.equals("keybind")) {
-            return keybindCompletions(input);
-        } else if (key.equals("block")) {
-            return blockCompletions(input);
-        } else if (key.equals("translate")) {
-            return translationCompletions(input);
-        } else {
-            return completions(input + "\"");
+            case "action" -> {
+                if (!input.endsWith("\""))
+                    return completions("\"");
+                String[] path = jsonPath.split("\\.");
+                if (path[path.length - 2].equals("clickevent")) {
+                    input = input.substring(0, input.length() - 1);
+                    return clickActionCompletions(input);
+                } else if (path[path.length - 2].equals("hoverevent")) {
+                    input = input.substring(0, input.length() - 1);
+                    return hoverActionCompletions(input);
+                } else {
+                    return Lists.newArrayList();
+                }
+            }
+            case "bold", "italic", "underlined", "strikethrough", "obfuscated", "interpret" -> {
+                return booleanCompletions(input);
+            }
+            case "keybind" -> {
+                return keybindCompletions(input);
+            }
+            case "block" -> {
+                return blockCompletions(input);
+            }
+            case "translate" -> {
+                return translationCompletions(input);
+            }
+            default -> {
+                return completions(input + "\"");
+            }
         }
     }
 
@@ -133,11 +137,9 @@ public class TextCompletions {
 
     public static final List<String> TRANSLATION_CACHE = Lists.newArrayList();
     public static List<TextCompletion> translationCompletions(String input) {
-        if (TRANSLATION_CACHE.size() == 0) {
+        if (TRANSLATION_CACHE.isEmpty()) {
             Set<String> keys = ((TranslationStorageAccessorMixin) Language.getInstance()).getTranslations().keySet();
-            keys.forEach((key) -> {
-                    TRANSLATION_CACHE.add("\"" + key + "\"");
-            });
+            keys.forEach((key) -> TRANSLATION_CACHE.add("\"" + key + "\""));
         }
 
         return matchingCompletions(input, TRANSLATION_CACHE);
@@ -148,7 +150,7 @@ public class TextCompletions {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null) return Lists.newArrayList();
 
-        if (KEYBIND_CACHE.size() == 0) {
+        if (KEYBIND_CACHE.isEmpty()) {
             for (KeyBinding allKeys : client.options.allKeys) {
                 KEYBIND_CACHE.add("\"" + allKeys.getTranslationKey() + "\"");
             }
@@ -170,7 +172,7 @@ public class TextCompletions {
             BlockHitResult blockHitResult = (BlockHitResult) client.crosshairTarget;
             BlockPos pos = blockHitResult.getBlockPos();
             
-            return Lists.newArrayList(matchingCompletions(input, "\"" + Integer.toString(pos.getX()), "\"" + pos.getX() + " " + pos.getY(), "\"" + pos.getX() + " " + pos.getY() + " " + pos.getZ()));
+            return Lists.newArrayList(matchingCompletions(input, "\"" + pos.getX(), "\"" + pos.getX() + " " + pos.getY(), "\"" + pos.getX() + " " + pos.getY() + " " + pos.getZ()));
         } else {
             return Lists.newArrayList(matchingCompletions(input, "\"~", "\"~ ~", "\"~ ~ ~"));
         }

@@ -23,7 +23,7 @@
           "me.shurik.bettersuggestions.client.BetterSuggestionsModClient"
 		],
 		"modmenu": [
-			"me.shurik.bettersuggestions.integration.ModMenuIntegration"
+			"me.shurik.bettersuggestions.client.integration.ModMenuIntegration"
 		]
 	},
 	"mixins": [

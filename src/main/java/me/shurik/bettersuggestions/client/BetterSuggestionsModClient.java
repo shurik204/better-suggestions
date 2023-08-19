@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
+import static me.shurik.bettersuggestions.BetterSuggestionsMod.MOD_ID;
+
 public class BetterSuggestionsModClient implements ClientModInitializer {
-	public static final Logger LOGGER = LoggerFactory.getLogger("better-suggestions");
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 	public static boolean MOD_PRESENT_ON_SERVER = false;

@@ -1,6 +1,7 @@
 package me.shurik.bettersuggestions.client.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CompletionsContainer<T> extends ArrayList<T> {
@@ -31,7 +32,7 @@ public class CompletionsContainer<T> extends ArrayList<T> {
     }
 
     public static <T> CompletionsContainer<T> empty() {
-        return new CompletionsContainer<T>();
+        return new CompletionsContainer<>();
     }
 
     public static <T> CompletionsContainer<T> of(Iterable<? extends T> elements, int offset) {
@@ -48,9 +49,7 @@ public class CompletionsContainer<T> extends ArrayList<T> {
 
     public static <T> CompletionsContainer<T> of(T[] elements, int offset) {
         CompletionsContainer<T> list = new CompletionsContainer<T>(elements.length);
-        for (T t : elements) {
-            list.add(t);
-        }
+        list.addAll(Arrays.asList(elements));
         return list;
     }
 }

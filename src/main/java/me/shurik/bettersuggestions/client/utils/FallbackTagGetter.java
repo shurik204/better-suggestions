@@ -1,19 +1,17 @@
 package me.shurik.bettersuggestions.client.utils;
 
+import com.google.common.collect.Sets;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
 
-import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.MOD_PRESENT_ON_SERVER;
-import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
-
 import java.util.Set;
 
-import com.google.common.collect.Sets;
-
-import net.fabricmc.api.EnvType;
+import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
+import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.MOD_PRESENT_ON_SERVER;
 
 @Environment(EnvType.CLIENT)
 public class FallbackTagGetter {
@@ -29,9 +27,7 @@ public class FallbackTagGetter {
 			}
 		});
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            FallbackTagGetter.recentTagRequests.clear();
-        });
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> FallbackTagGetter.recentTagRequests.clear());
     }
 
     public static void tryRequestEntityTags(Entity entity) {

@@ -19,8 +19,6 @@ public class ServerEvents {
 		});
 
 		// Send mod presence packet to client on join
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ServerPacketSender.sendModPresence(handler.player);
-		});
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ServerPacketSender.sendModPresence(handler.player));
     }
 }
