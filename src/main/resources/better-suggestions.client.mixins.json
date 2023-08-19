@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "me.shurik.bettersuggestions.mixin.client",
+	"package": "me.shurik.bettersuggestions.client.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"ClientCommandSourceMixin",
@@ -14,7 +14,8 @@
 		"LanguageManagerMixin",
 		"ChatInputSuggestorAccessorMixin",
 		"TranslationStorageAccessorMixin",
-		"ClientPlayNetworkHandlerMixin"
+		"ClientPlayNetworkHandlerMixin",
+		"EntityOutlineMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

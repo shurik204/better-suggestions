@@ -20,7 +20,7 @@
 			"me.shurik.bettersuggestions.BetterSuggestionsMod"
 		],
 		"client": [
-			"me.shurik.bettersuggestions.BetterSuggestionsModClient"
+          "me.shurik.bettersuggestions.client.BetterSuggestionsModClient"
 		],
 		"modmenu": [
 			"me.shurik.bettersuggestions.integration.ModMenuIntegration"

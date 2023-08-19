@@ -1,21 +1,19 @@
 package me.shurik.bettersuggestions.mixin;
 
-import org.spongepowered.asm.mixin.injection.Inject;
-
-import java.util.Set;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import me.shurik.bettersuggestions.access.SynchableEntityDataAccessor;
 import me.shurik.bettersuggestions.data.TrackableTagSet;
-import me.shurik.bettersuggestions.networking.ModPackets;
+import me.shurik.bettersuggestions.network.ServerPacketSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Set;
 
 @Mixin(Entity.class)
 public abstract class EntityTagSyncMixin implements SynchableEntityDataAccessor {
@@ -36,7 +34,7 @@ public abstract class EntityTagSyncMixin implements SynchableEntityDataAccessor 
     void onStartedTrackingBy(ServerPlayerEntity player, CallbackInfo info) {
         // If the entity is being tracked by a player for the first time,
         // send the current scoreboard tags to the client
-        ModPackets.EntityTagsUpdateS2CPacket.send(player, (Entity) (Object) this);
+        ServerPacketSender.sendEntityTagsUpdate(player, (Entity) (Object) this);
     }
 
     public boolean isDirty() {
