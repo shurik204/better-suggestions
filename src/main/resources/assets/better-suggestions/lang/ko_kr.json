@@ -1,0 +1,13 @@
+{
+  "text.suggestion.tooltip.entity_tags": "태그 (%s): %s",
+  "text.suggestion.tooltip.loading_tags": "서버에서 태그들 불러오는 중...",
+  "text.suggestion.tooltip.vehicle": "%s 타는 중",
+
+  "text.autoconfig.better-suggestions.title": "Better Suggestions 설정",
+  "text.autoconfig.better-suggestions.option.maxSuggestionsShown": "명령어 제안들을 몇 개까지 표시할까요",
+  "text.autoconfig.better-suggestions.option.entitySuggestionRadius": "제안할 엔티티 탐색 범위",
+  "text.autoconfig.better-suggestions.option.suggestEntitySelector": "엔티티를 바라보고 있을 때 엔티티 선택자 제안하기",
+  "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[0]": "해당 설정이 켜져 있다면 엔티티를 바라보고 있을 때",
+  "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[1]": "@e[type=ENTITY_TYPE,limit=1,sort=nearest]라고 제안하기",
+  "text.autoconfig.better-suggestions.option.prioritizedSuggestions": "제안 우선순위"
+}
