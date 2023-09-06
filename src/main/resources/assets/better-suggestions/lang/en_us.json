@@ -9,5 +9,12 @@
     "text.autoconfig.better-suggestions.option.suggestEntitySelector": "Suggest entity selector when looking at an entity",
     "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[0]": "Suggest @e[type=ENTITY_TYPE,limit=1,sort=nearest] entity",
     "text.autoconfig.better-suggestions.option.suggestEntitySelector.@Tooltip[1]": "selector when looking at an entity",
+    "text.autoconfig.better-suggestions.option.hideUnderscoreFunctions": "Hide \"private\" functions",
+    "text.autoconfig.better-suggestions.option.hideUnderscoreFunctions.@Tooltip[0]": "Hide functions prefixed with an underscore.",
+    "text.autoconfig.better-suggestions.option.hideUnderscoreFunctions.@Tooltip[1]": "These are usually functions you're not",
+    "text.autoconfig.better-suggestions.option.hideUnderscoreFunctions.@Tooltip[2]": "meant to invoke manually.",
+    "text.autoconfig.better-suggestions.option.rememberCommandOnEscape": "Remember chat command",
+    "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[0]": "Restores command after closing chat with escape",
+    "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[1]": "(Use Shift + Escape to temporarily disable)",
     "text.autoconfig.better-suggestions.option.prioritizedSuggestions": "Prioritized suggestions"
 }

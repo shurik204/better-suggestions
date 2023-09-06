@@ -1,18 +1,16 @@
 package me.shurik.bettersuggestions.client.utils;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-
-import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.api.EnvType;
+import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
 
 @Environment(EnvType.CLIENT)
 public class ClientUtils {
@@ -26,6 +24,7 @@ public class ClientUtils {
         return null;
     }
 
+    @Nullable
     public static Entity getEntityByUUID(String uuid) {
         return getEntityByUUID(CLIENT.world, UUID.fromString(uuid));
     }

@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import me.shurik.bettersuggestions.config.ConfigStore;
 import me.shurik.bettersuggestions.event.ServerEvents;
+import me.shurik.bettersuggestions.suggestion.FunctionArgumentTypeSuggestions;
 import me.shurik.bettersuggestions.suggestion.ScoreHolderArgumentTypeSuggestions;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ public class BetterSuggestionsMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ScoreHolderArgumentTypeSuggestions.init();
+		FunctionArgumentTypeSuggestions.init();
 		ServerEvents.init();
 		
 		LOGGER.info("Suggestions!");

@@ -1,5 +1,6 @@
 package me.shurik.bettersuggestions.client.mixin;
 
+import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -49,11 +50,13 @@ public class EntityRendererMixin<T extends Entity> {
     // public void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
     @Inject(method = "render", at = @At("HEAD"))
     void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
-        if ((entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity) && ((HighlightableEntityAccessor)entity).isHighlighted()) {
+        if (((HighlightableEntityAccessor)entity).isHighlighted()) {
             if (entity instanceof MarkerEntity) {
                 renderItem(Items.STRUCTURE_VOID.getDefaultStack(), light, matrices, vertexConsumers, entity);
-            } else {
+            } else if (entity instanceof AreaEffectCloudEntity) {
                 renderItem(Items.LINGERING_POTION.getDefaultStack(), light, matrices, vertexConsumers, entity);
+            } else {
+                SpecialRendererQueue.addEntity(entity);
             }
         }
     }

@@ -2,6 +2,8 @@ package me.shurik.bettersuggestions.event;
 
 import me.shurik.bettersuggestions.access.SynchableEntityDataAccessor;
 import me.shurik.bettersuggestions.network.ServerPacketSender;
+import me.shurik.bettersuggestions.utils.Scoreboards;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 
@@ -16,6 +18,10 @@ public class ServerEvents {
 					accessor.setClean();
 				}
 			});
+		});
+
+		ServerLifecycleEvents.SERVER_STARTING.register((server) -> {
+			Scoreboards.server = server;
 		});
 
 		// Send mod presence packet to client on join

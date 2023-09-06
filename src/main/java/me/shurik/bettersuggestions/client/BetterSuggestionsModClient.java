@@ -16,6 +16,7 @@ import static me.shurik.bettersuggestions.BetterSuggestionsMod.MOD_ID;
 public class BetterSuggestionsModClient implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	public static boolean escapePressed = false;
 
 	public static boolean MOD_PRESENT_ON_SERVER = false;
 
@@ -23,7 +24,6 @@ public class BetterSuggestionsModClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-
 		ClientEvents.init();
 		FallbackTagGetter.init();
 		ClientPacketHandler.init();

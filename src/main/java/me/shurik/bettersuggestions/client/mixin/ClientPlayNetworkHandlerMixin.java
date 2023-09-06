@@ -1,17 +1,15 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import java.util.stream.Collectors;
-
 import com.mojang.brigadier.suggestion.Suggestion;
-
+import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
+import java.util.stream.Collectors;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class ClientPlayNetworkHandlerMixin {

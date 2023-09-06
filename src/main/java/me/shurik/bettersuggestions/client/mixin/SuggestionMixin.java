@@ -13,6 +13,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Uuids;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,15 +37,34 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
     private String text;
 
     private boolean entitySuggestion = false;
+    private boolean blockPosSuggestion = false;
+    private boolean positionSuggestion = false;
+
     private Entity suggestions$entity;
+    private Vec3d suggestions$position = null;
+    private BlockPos suggestions$blockPos = null;
 
     @Inject(at=@At("RETURN"), method="<init>(Lcom/mojang/brigadier/context/StringRange;Ljava/lang/String;Lcom/mojang/brigadier/Message;)V", remap = false)
     private void init(final StringRange range, final String text, final Message tooltip, CallbackInfo info) {
+        if (text == null) return;
+
         if (StringUtils.isUUID(text)) {
             entitySuggestion = true;
             suggestions$entity =  ClientUtils.getEntityByUUID(text);
         }
+//        else if (StringUtils.isBlockPos(text)) {
+//            blockPosSuggestion = true;
+//            suggestions$blockPos = StringUtils.parseBlockPos(text);
+//        }
+//        else if (StringUtils.isPosition(text)) {
+//            positionSuggestion = true;
+//            suggestions$position = StringUtils.parsePosition(text);
+//        }
     }
+
+    public boolean isEntitySuggestion() { return entitySuggestion; }
+    public boolean isPositionSuggestion() { return positionSuggestion; }
+    public boolean isBlockPosSuggestion() { return blockPosSuggestion; }
 
     public List<Text> getMultilineTooltip() {
         List<Text> tooltip = Lists.newArrayList();
@@ -92,8 +113,22 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
         return suggestions$entity;
     }
 
-    public boolean isEntitySuggestion() {
-        return entitySuggestion;
+    @Override
+    public Vec3d getPosition() {
+        if (positionSuggestion) {
+            return suggestions$position;
+        }
+
+        return null;
+    }
+
+    @Override
+    public BlockPos getBlockPos() {
+        if (blockPosSuggestion) {
+            return suggestions$blockPos;
+        }
+
+        return null;
     }
 
     public Text getFormattedText() {

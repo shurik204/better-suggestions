@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
 import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
 import me.shurik.bettersuggestions.client.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.RegistryUtils;
 import net.minecraft.client.font.TextRenderer;
@@ -176,18 +177,24 @@ public class SuggestionWindowMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     void renderFinish(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
+        CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
+
+        if (customSuggestion.isBlockPosSuggestion()) {
+            SpecialRendererQueue.addBlock(customSuggestion.getBlockPos());
+        } else if (customSuggestion.isPositionSuggestion()) {
+            SpecialRendererQueue.addPosition(customSuggestion.getPosition());
+        }
+
         // Render shift tooltip
         if (renderShiftTooltip && Screen.hasShiftDown()) {
-            CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
             List<Text> tooltip = customSuggestion.getMultilineTooltip();
             if (tooltip != null) {
-                //                                                                                                         get suggestion index in for loop
+                //                                                                                                             get suggestion index in for loop
                 context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, this.area.getY() + 2 + 12 * ((this.selection - this.inWindowIndex) - tooltip.size() + 1));
             }
         }
 
         // Highlight entity from selected suggestion
-        CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
         if (customSuggestion.isEntitySuggestion()) {
             Entity entity = customSuggestion.getEntity();
             if (entity != null) {
