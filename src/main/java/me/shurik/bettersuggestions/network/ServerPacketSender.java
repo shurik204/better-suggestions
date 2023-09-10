@@ -1,18 +1,20 @@
 package me.shurik.bettersuggestions.network;
 
-import net.minecraft.entity.Entity;
+import me.shurik.bettersuggestions.ModConstants;
+import me.shurik.bettersuggestions.utils.ByteBufUtils;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.util.Set;
+
 public class ServerPacketSender {
-    public static void sendEntityTagsUpdate(ServerPlayerEntity player, Entity entity) {
-        ServerNetworking.sendPacketToClient(player, ModPackets.EntityTagsUpdateS2CPacketID, ServerNetworking.createEntityTagsBuffer(entity));
-    }
-
-    public static void broadcastEntityTagsUpdate(Entity entity) {
-        ServerNetworking.broadcastFromEntity(entity, ModPackets.EntityTagsUpdateS2CPacketID, ServerNetworking.createEntityTagsBuffer(entity));
-    }
-
     public static void sendModPresence(ServerPlayerEntity player) {
-        ServerNetworking.sendPacketToClient(player, ModPackets.ModPresenceS2CPacketID, ServerNetworking.EMPTY_BUFFER);
+         ServerNetworking.send(player, ModPackets.ModPresenceBeacon, ByteBufUtils.empty());
+    }
+
+    public static void sendEntityCommandTagsResponse(ServerPlayerEntity player, int entityId, Set<String> commandTags) {
+        if (ModConstants.DEBUG) {
+            ModConstants.LOGGER.info("Sending command tags for entity " + entityId + " (" + commandTags.size() + " tags)");
+        }
+        ServerNetworking.send(player, ModPackets.EntityCommandTagsS2CPacketResponseID, ServerNetworking.createEntityCommandTagsBuffer(entityId, commandTags));
     }
 }

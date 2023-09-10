@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
+import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 
 /**
  *  Make maxSuggestionSize configurable
@@ -43,30 +43,18 @@ public class ChatInputSuggestorMixin {
         return COLORS[index % COLORS.length];
     }
 
-    @Shadow
-    int maxSuggestionSize;
+    @Shadow int maxSuggestionSize;
 
     @Shadow private ParseResults<CommandSource> parse;
 
     @Shadow @Final
     TextFieldWidget textField;
 
-    @Redirect(
-            method = "show", 
-            at = @At(
-                value = "INVOKE", 
-                target = "Lcom/mojang/brigadier/suggestion/Suggestion;getText()Ljava/lang/String;",
-                remap = false
-                )
-            )
-    String getAsFormattedText(Suggestion suggestion) {
-        return ((CustomSuggestionAccessor)suggestion).getFormattedText().getString();
-    }
+    @Redirect(method = "show", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/suggestion/Suggestion;getText()Ljava/lang/String;", remap = false))
+    String getAsFormattedText(Suggestion suggestion) { return ((CustomSuggestionAccessor)suggestion).getFormattedText().getString(); }
 
     @Inject(method = "show",at = @At("HEAD"))
-    void setMaxSuggestionSize(boolean narrateFirstSuggestion, CallbackInfo info) {
-        maxSuggestionSize = CONFIG.maxSuggestionsShown;
-    }
+    void setMaxSuggestionSize(boolean narrateFirstSuggestion, CallbackInfo info) { maxSuggestionSize = CONFIG.maxSuggestionsShown; }
 
     @Inject(method = "refresh", at = @At("TAIL"))
     void grabCoordinates(CallbackInfo ci) {
@@ -76,15 +64,6 @@ public class ChatInputSuggestorMixin {
             return;
         }
 
-        // Add new block highlights
-//        List<String> list = Lists.newArrayList();
-//        populateNodeList(list, parse.getContext());
-//
-//        AtomicInteger index = new AtomicInteger();
-//        if (!list.isEmpty()) {
-//
-//        }
-
         for (ParsedArgument<CommandSource, ?> parsedArgument : parse.getContext().getLastChild().getArguments().values()) {
             if (parsedArgument.getResult() instanceof DefaultPosArgument) {
                 BlockPos pos = StringUtils.parseBlockPos(parsedArgument.getRange().get(parse.getReader()));
@@ -92,15 +71,4 @@ public class ChatInputSuggestorMixin {
             }
         }
     }
-
-//    private void populateNodeList(List<String> list, CommandContextBuilder<CommandSource> context) {
-//        // List nodes in this context
-//        context.getNodes().forEach((parsedNode) -> {
-//            list.add(parsedNode.getRange().get(parse.getReader()));
-//        });
-//        // Move down if possible
-//        if (context.getChild() != null) {
-//            populateNodeList(list, context.getChild());
-//        }
-//    }
 }

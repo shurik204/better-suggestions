@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
-import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
+import static me.shurik.bettersuggestions.ModConstants.CONFIG;
+import static me.shurik.bettersuggestions.client.Client.INSTANCE;
 
 /**
  * Suggest nearby entities in selectors.
@@ -20,8 +20,8 @@ import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIE
 public class ClientCommandSourceMixin {
     @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
     private void suggestNearbyEntities(CallbackInfoReturnable<Collection<String>> info) {
-        if (CLIENT.world != null && CLIENT.player != null) {
-            info.setReturnValue(CLIENT.world.getOtherEntities(null, CLIENT.player.getBoundingBox().expand(CONFIG.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
+        if (INSTANCE.world != null && INSTANCE.player != null) {
+            info.setReturnValue(INSTANCE.world.getOtherEntities(null, INSTANCE.player.getBoundingBox().expand(CONFIG.entitySuggestions.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
         }
     }
 }

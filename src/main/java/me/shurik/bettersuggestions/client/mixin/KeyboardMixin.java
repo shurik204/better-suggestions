@@ -1,6 +1,6 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
+import me.shurik.bettersuggestions.client.Client;
 import net.minecraft.client.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +13,6 @@ public class KeyboardMixin {
     // onKey
     @Inject(method = "onKey", at = @At("HEAD"))
     private void onKey(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
-        BetterSuggestionsModClient.escapePressed = key == GLFW.GLFW_KEY_ESCAPE;
+        Client.escapePressed = key == GLFW.GLFW_KEY_ESCAPE;
     }
 }

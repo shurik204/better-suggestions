@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import java.util.List;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
+import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 
 public class FunctionArgumentTypeSuggestions {
     public static boolean filteredFunctionListInitialized = false;
@@ -21,7 +21,7 @@ public class FunctionArgumentTypeSuggestions {
         FunctionCommand.SUGGESTION_PROVIDER = (context, builder) -> {
             CommandFunctionManager commandFunctionManager = context.getSource().getServer().getCommandFunctionManager();
             CommandSource.suggestIdentifiers(commandFunctionManager.getFunctionTags(), builder, "#");
-            if (CONFIG.hideUnderscoreFunctions) {
+            if (CONFIG.functionSuggestions.hideUnderscoreFunctions) {
                 if (!filteredFunctionListInitialized) {
                     initFilteredFunctionList(context);
                 }

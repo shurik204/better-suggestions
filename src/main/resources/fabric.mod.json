@@ -33,7 +33,9 @@
 	"depends": {
 		"fabricloader": ">=0.14.17",
 		"java": ">=17",
-		"fabric-api": "*",
+		"fabric-networking-api-v1": "*",
+		"fabric-rendering-v1": "*",
+		"fabric-lifecycle-events-v1": "*",
 		"cloth-config": "*"
 	},
 	"suggests": {

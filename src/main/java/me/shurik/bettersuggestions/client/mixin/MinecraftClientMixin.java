@@ -1,6 +1,6 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ public abstract class MinecraftClientMixin {
 
     @Inject(at = @At("HEAD"), method = "hasOutline", cancellable = true)
     private void hasOutline(Entity entity, CallbackInfoReturnable<Boolean> info) {
-        if (((HighlightableEntityAccessor) entity).isHighlighted()) {
+        if (((ClientEntityDataAccessor) entity).isHighlighted()) {
             info.setReturnValue(true);
         }
     }

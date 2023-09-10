@@ -1,8 +1,11 @@
 package me.shurik.bettersuggestions.client.mixin;
 
 import com.mojang.brigadier.suggestion.Suggestion;
-import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
+import me.shurik.bettersuggestions.client.Client;
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
+import me.shurik.bettersuggestions.client.data.ClientDataGetter;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,8 +23,14 @@ public class ClientPlayNetworkHandlerMixin {
         if (packet.getCompletionId() < -1_000_000_000 && packet.getCompletionId() > -2_000_000_000) {
             // Convert back
             int entityId = -packet.getCompletionId() - 1_000_000_000;
-            // Store tags
-            BetterSuggestionsModClient.ENTITY_TAGS.put(entityId, packet.getSuggestions().getList().stream().map(Suggestion::getText).collect(Collectors.toSet()));
+            // Remove from pending requests
+            ClientDataGetter.pendingTagRequests.remove(entityId);
+            // Get entity
+            Entity entity = Client.INSTANCE.world.getEntityById(entityId);
+            if (entity != null) {
+                // Store received tags
+                ((ClientEntityDataAccessor) entity).setClientCommandTags(packet.getSuggestions().getList().stream().map(Suggestion::getText).collect(Collectors.toSet()));
+            }
             // Stop processing
             info.cancel();
         }

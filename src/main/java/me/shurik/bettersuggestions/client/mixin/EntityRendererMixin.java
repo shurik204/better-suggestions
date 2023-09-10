@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -50,7 +50,7 @@ public class EntityRendererMixin<T extends Entity> {
     // public void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
     @Inject(method = "render", at = @At("HEAD"))
     void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo info) {
-        if (((HighlightableEntityAccessor)entity).isHighlighted()) {
+        if (((ClientEntityDataAccessor)entity).isHighlighted()) {
             if (entity instanceof MarkerEntity) {
                 renderItem(Items.STRUCTURE_VOID.getDefaultStack(), light, matrices, vertexConsumers, entity);
             } else if (entity instanceof AreaEffectCloudEntity) {

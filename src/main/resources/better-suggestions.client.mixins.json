@@ -9,7 +9,6 @@
     "ChatScreenMixin",
     "ClientCommandSourceMixin",
     "ClientPlayNetworkHandlerMixin",
-    "EntityOutlineMixin",
     "EntityRendererMixin",
     "KeyboardMixin",
     "LanguageManagerMixin",
@@ -22,5 +21,6 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "ClientEntityDataMixin"
   ]
 }

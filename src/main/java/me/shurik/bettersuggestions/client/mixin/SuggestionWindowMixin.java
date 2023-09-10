@@ -5,7 +5,7 @@ import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
-import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
 import me.shurik.bettersuggestions.client.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.RegistryUtils;
@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
+import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 
 /**
  * Render tooltip while holding shift
@@ -104,7 +104,7 @@ public class SuggestionWindowMixin {
                     prioritizedSuggestions.add(0, suggestion);
 
                     // Suggest entity selector if enabled
-                    if (CONFIG.suggestEntitySelector) {
+                    if (CONFIG.entitySuggestions.suggestEntitySelector) {
                         String selector = String.format("@e[type=%s,limit=1,sort=nearest]", RegistryUtils.getName(Registries.ENTITY_TYPE, crosshairTarget.getType()));
                         StringRange stringRange = new StringRange(suggestion.getRange().getStart(), suggestion.getRange().getStart() + selector.length());
                         prioritizedSuggestions.add(1, new Suggestion(stringRange, selector));
@@ -198,7 +198,7 @@ public class SuggestionWindowMixin {
         if (customSuggestion.isEntitySuggestion()) {
             Entity entity = customSuggestion.getEntity();
             if (entity != null) {
-                ((HighlightableEntityAccessor)entity).setHighlighted(true);
+                ((ClientEntityDataAccessor)entity).setHighlighted(true);
             }
         }
     }

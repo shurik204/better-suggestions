@@ -28,7 +28,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	String[] modules = new String[] { "fabric-networking-api-v1", "fabric-rendering-v1", "fabric-lifecycle-events-v1" }
+	for (String module : modules) {
+		modImplementation(include(fabricApi.module(module, project.fabric_version)))
+	}
 
 	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 

@@ -1,6 +1,6 @@
 package me.shurik.bettersuggestions.client.mixin;
 
-import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
+import me.shurik.bettersuggestions.client.Client;
 import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static me.shurik.bettersuggestions.BetterSuggestionsMod.CONFIG;
+import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 
 @Mixin(ChatScreen.class)
 public class ChatScreenMixin {
@@ -29,14 +29,14 @@ public class ChatScreenMixin {
 
     @Inject(at = @At("HEAD"), method = "removed")
     void storeCommand(CallbackInfo ci) {
-        if (BetterSuggestionsModClient.escapePressed) {
+        if (Client.escapePressed) {
             if (CONFIG.rememberCommandOnEscape && !Screen.hasShiftDown() && chatField.getText().startsWith("/")) {
                 suggestions$storedCommand = chatField.getText();
             }
-        } else {
-            if (SpecialRendererQueue.BLOCKS.listExists("chatInputSuggestor")) {
-                SpecialRendererQueue.BLOCKS.getList("chatInputSuggestor").clear();
-            }
+        }
+//        else
+        if (SpecialRendererQueue.BLOCKS.listExists("chatInputSuggestor")) {
+            SpecialRendererQueue.BLOCKS.getList("chatInputSuggestor").clear();
         }
     }
 }

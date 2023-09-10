@@ -1,5 +1,6 @@
 package me.shurik.bettersuggestions.network;
 
+import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import me.shurik.bettersuggestions.mixin.EntityTrackerAccessor;
 import me.shurik.bettersuggestions.mixin.ThreadedAnvilChunkStorageAccessor;
@@ -15,14 +16,16 @@ import net.minecraft.world.chunk.ChunkManager;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ServerNetworking {
-    public static final PacketByteBuf EMPTY_BUFFER = new PacketByteBuf(Unpooled.EMPTY_BUFFER);
-    public static PacketByteBuf createEntityTagsBuffer(Entity entity) {
-        // Entity ID, tag count, tag list (strings)
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer()).writeVarInt(entity.getId()).writeVarInt(entity.getCommandTags().size());
-        for (String tag : entity.getCommandTags()) buf.writeString(tag);
+    public static PacketByteBuf createEntityCommandTagsBuffer(int entityId, Set<String> commandTags) {
+        // Calculate the capacity of the buffer to avoid resizing
+        // (4 bytes) [entity ID] + (4 bytes) [tag count] + sum(length of each tag)
+        int capacity = 4 * 2 + commandTags.stream().mapToInt(ByteBufUtil::utf8Bytes).sum();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(capacity, capacity)).writeVarInt(entityId).writeVarInt(commandTags.size());
+        for (String tag : commandTags) buf.writeString(tag);
 
         return buf;
     }
@@ -46,11 +49,11 @@ public class ServerNetworking {
 
     public static void broadcastFromEntity(Entity entity, Identifier packetId, PacketByteBuf buf) {
         for (ServerPlayerEntity player : tracking(entity)) {
-            sendPacketToClient(player, packetId, buf);
+            send(player, packetId, buf);
         }
     }
 
-    public static void sendPacketToClient(ServerPlayerEntity player, Identifier packetId, PacketByteBuf buf) {
+    public static void send(ServerPlayerEntity player, Identifier packetId, PacketByteBuf buf) {
         ServerPlayNetworking.send(player, packetId, buf);
     }
 }

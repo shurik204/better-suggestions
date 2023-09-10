@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-import static me.shurik.bettersuggestions.client.BetterSuggestionsModClient.CLIENT;
+import static me.shurik.bettersuggestions.client.Client.INSTANCE;
 
 @Environment(EnvType.CLIENT)
 public class ClientUtils {
@@ -26,7 +26,7 @@ public class ClientUtils {
 
     @Nullable
     public static Entity getEntityByUUID(String uuid) {
-        return getEntityByUUID(CLIENT.world, UUID.fromString(uuid));
+        return getEntityByUUID(INSTANCE.world, UUID.fromString(uuid));
     }
 
     public static boolean entityExists(ClientWorld world, int id) {
@@ -34,11 +34,11 @@ public class ClientUtils {
     }
 
     public static boolean entityExists(int id) {
-        return entityExists(CLIENT.world, id);
+        return entityExists(INSTANCE.world, id);
     }
 
     @Nullable
     public static Entity getCrosshairTargetEntity() {
-        return CLIENT.crosshairTarget != null && CLIENT.crosshairTarget.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) CLIENT.crosshairTarget).getEntity() : null;
+        return INSTANCE.crosshairTarget != null && INSTANCE.crosshairTarget.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) INSTANCE.crosshairTarget).getEntity() : null;
     }
 }

@@ -1,36 +1,44 @@
 package me.shurik.bettersuggestions.client.event;
 
-import me.shurik.bettersuggestions.client.BetterSuggestionsModClient;
-import me.shurik.bettersuggestions.client.access.HighlightableEntityAccessor;
+import me.shurik.bettersuggestions.client.Client;
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
+import me.shurik.bettersuggestions.network.ModPackets;
+import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
 
 
 public class ClientEvents {
-    private static final MinecraftClient client = MinecraftClient.getInstance();
     public static void init() {
         // Special cases for rendering highlighted entities
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register((worldrendercontext) -> {
-            if (client.world != null) {
+            if (Client.INSTANCE.world != null) {
                 SpecialRendererQueue.processQueue(worldrendercontext);
             }
         });
 
         // Clear entity highlight information after rendering
         WorldRenderEvents.LAST.register((worldrendercontext) -> {
-            if (client.world != null) {
-                client.world.getEntities().forEach((entity) -> ((HighlightableEntityAccessor) entity).setHighlighted(false));
+            if (Client.INSTANCE.world != null) {
+                Client.INSTANCE.world.getEntities().forEach((entity) -> ((ClientEntityDataAccessor) entity).setHighlighted(false));
             }
-            BetterSuggestionsModClient.escapePressed = false;
+            Client.escapePressed = false;
+        });
+
+        C2SPlayChannelEvents.REGISTER.register((handler, sender, client, channels) -> {
+            if (Client.SERVER_SIDE_PRESENT) return;
+
+            Client.SERVER_SIDE_PRESENT = channels.contains(ModPackets.ModPresenceBeacon);
+            if (Client.SERVER_SIDE_PRESENT) {
+                Client.LOGGER.info("Detected mod installed on server");
+            }
         });
 
         // Clear entity tags when disconnecting from server
         // Reset mod presence on server
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            BetterSuggestionsModClient.ENTITY_TAGS.clear();
-            BetterSuggestionsModClient.MOD_PRESENT_ON_SERVER = false;
+            Client.SERVER_SIDE_PRESENT = false;
             SpecialRendererQueue.clearAll();
         });
     }

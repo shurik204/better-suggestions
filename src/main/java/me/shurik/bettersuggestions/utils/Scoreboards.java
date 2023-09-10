@@ -1,17 +1,15 @@
 package me.shurik.bettersuggestions.utils;
 
+import me.shurik.bettersuggestions.Server;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.scoreboard.ServerScoreboard;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.Collection;
 
 public class Scoreboards {
-    public static MinecraftServer server;
-
     // Base methods
-    public static ServerScoreboard getInstance() { return server.getScoreboard(); }
+    public static ServerScoreboard getInstance() { return Server.INSTANCE.getScoreboard(); }
     public static Collection<ScoreboardObjective> getObjectives() { return getInstance().getObjectives(); }
     public static ScoreboardObjective getObjective(String name) { return getInstance().getObjective(name); }
     public static ScoreboardPlayerScore getScore(String name, ScoreboardObjective objective) { return getInstance().getPlayerScore(name, objective); }
