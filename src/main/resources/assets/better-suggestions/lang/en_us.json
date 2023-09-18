@@ -5,7 +5,7 @@
     "text.suggestion.tooltip.pos.layout": "%s: %s",
     "text.suggestion.tooltip.entity_tags": "Tags",
     "text.suggestion.tooltip.entity_tags.layout": "%s (%s): %s",
-    "text.suggestion.tooltip.loading_tags": "Fetching tags from server...",
+    "text.suggestion.tooltip.entity_tags.loading": "Fetching tags from server...",
     "text.suggestion.tooltip.vehicle": "Riding",
     "text.suggestion.tooltip.vehicle.layout": "%s: %s",
     "text.suggestion.tooltip.passengers": "Passengers",
@@ -14,6 +14,11 @@
     "text.suggestion.tooltip.team.layout": "%s: %s",
     "text.suggestion.tooltip.health": "Health",
     "text.suggestion.tooltip.health.layout": "%s: %s/%s",
+    "text.suggestion.tooltip.entity_scores": "Scores",
+    "text.suggestion.tooltip.entity_scores.first_layout": "%s:",
+    "text.suggestion.tooltip.entity_scores.layout": "  - %s: %s",
+    "text.suggestion.tooltip.entity_scores.loading": "Fetching scores from server...",
+    "text.suggestion.tooltip.entity_scores.no_server_side": "Unable to fetch scores from server",
 
     "text.autoconfig.better-suggestions.title": "Better Suggestions Config",
     "text.autoconfig.better-suggestions.category.default": "General",
@@ -21,6 +26,8 @@
     "text.autoconfig.better-suggestions.category.functionSuggestions": "Function Suggestions",
     "text.autoconfig.better-suggestions.category.server": "Permissions",
     "text.autoconfig.better-suggestions.option.maxSuggestionsShown": "How many suggestions to show",
+    "text.autoconfig.better-suggestions.option.highlightCoordinates": "Show coordinates in world",
+    "text.autoconfig.better-suggestions.option.highlightCoordinates.@Tooltip[0]": "Highlight blocks and coordinates from commands",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape": "Remember chat command",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[0]": "Restores command after closing chat with escape",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[1]": "(Use Shift + Escape to temporarily disable)",
@@ -39,6 +46,7 @@
     "text.autoconfig.better-suggestions.option.entitySuggestions.showEntityPassengers": "Show passengers",
     "text.autoconfig.better-suggestions.option.entitySuggestions.showEntityTeam": "Show team",
     "text.autoconfig.better-suggestions.option.entitySuggestions.showEntityHealth": "Show health",
+    "text.autoconfig.better-suggestions.option.entitySuggestions.showEntityScores": "Show scores",
 
 
     "text.autoconfig.better-suggestions.option.functionSuggestions.hideUnderscoreFunctions": "Hide \"private\" functions",

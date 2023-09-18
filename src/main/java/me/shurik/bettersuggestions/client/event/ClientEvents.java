@@ -23,7 +23,6 @@ public class ClientEvents {
             if (Client.INSTANCE.world != null) {
                 Client.INSTANCE.world.getEntities().forEach((entity) -> ((ClientEntityDataAccessor) entity).setHighlighted(false));
             }
-            Client.escapePressed = false;
         });
 
         C2SPlayChannelEvents.REGISTER.register((handler, sender, client, channels) -> {
@@ -40,6 +39,7 @@ public class ClientEvents {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             Client.SERVER_SIDE_PRESENT = false;
             SpecialRendererQueue.clearAll();
+            Client.storedChatCommand = null;
         });
     }
 }

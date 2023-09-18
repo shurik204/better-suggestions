@@ -4,9 +4,8 @@ import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
-import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
 import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
-import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
+import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
 import me.shurik.bettersuggestions.client.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.RegistryUtils;
 import net.minecraft.client.font.TextRenderer;
@@ -179,18 +178,18 @@ public class SuggestionWindowMixin {
     void renderFinish(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
         CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor)this.suggestions.get(this.selection);
 
-        if (customSuggestion.isBlockPosSuggestion()) {
-            SpecialRendererQueue.addBlock(customSuggestion.getBlockPos());
-        } else if (customSuggestion.isPositionSuggestion()) {
-            SpecialRendererQueue.addPosition(customSuggestion.getPosition());
-        }
+//        if (customSuggestion.isBlockPosSuggestion()) {
+//            SpecialRendererQueue.addBlock(customSuggestion.getBlockPos());
+//        } else if (customSuggestion.isPositionSuggestion()) {
+//            SpecialRendererQueue.addPosition(customSuggestion.getPosition());
+//        }
 
         // Render shift tooltip
         if (renderShiftTooltip && Screen.hasShiftDown()) {
             List<Text> tooltip = customSuggestion.getMultilineTooltip();
             if (tooltip != null) {
                 //                                                                                                             get suggestion index in for loop
-                context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, this.area.getY() + 2 + 12 * ((this.selection - this.inWindowIndex) - tooltip.size() + 1));
+                context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, Math.round(this.area.getY() + (12 * (this.selection - this.inWindowIndex)) - 10 * (tooltip.size() - 1) - 1));
             }
         }
 

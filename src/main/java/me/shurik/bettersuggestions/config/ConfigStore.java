@@ -28,6 +28,9 @@ public class ConfigStore implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 2, max = 50)
     public int maxSuggestionsShown = 12;
 
+    @ConfigEntry.Gui.Tooltip(count = 1)
+    public boolean highlightCoordinates = true;
+
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean rememberCommandOnEscape = false;
 

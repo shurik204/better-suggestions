@@ -14,9 +14,13 @@ import static me.shurik.bettersuggestions.client.Client.INSTANCE;
 
 public class ClientDataGetter {
     public static final Set<Integer> pendingTagRequests = Sets.newHashSet();
+    public static final Set<Integer> pendingScoreRequests = Sets.newHashSet();
     public static void init() {
         // Clear the queue on disconnect
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> pendingTagRequests.clear());
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            pendingTagRequests.clear();
+            pendingScoreRequests.clear();
+        });
     }
 
     public static void requestEntityTags(Entity entity) {
@@ -27,6 +31,15 @@ public class ClientDataGetter {
         }
         if (!pendingTagRequests.add(entity.getId()) && ModConstants.DEBUG) {
             Client.LOGGER.warn("Tags for entity " + entity.getId() + " (" + entity.getType().getName().toString() + ") were requested more than once!");
+        }
+    }
+
+    public static void requestEntityScores(Entity entity) {
+        if (Client.SERVER_SIDE_PRESENT) {
+            ClientPacketSender.sendEntityScoresRequest(entity);
+        }
+        if (!pendingScoreRequests.add(entity.getId()) && ModConstants.DEBUG) {
+            Client.LOGGER.warn("Scores for entity " + entity.getId() + " (" + entity.getType().getName().toString() + ") were requested more than once!");
         }
     }
 }

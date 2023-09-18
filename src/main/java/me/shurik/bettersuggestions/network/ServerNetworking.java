@@ -1,12 +1,12 @@
 package me.shurik.bettersuggestions.network;
 
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 import me.shurik.bettersuggestions.mixin.EntityTrackerAccessor;
 import me.shurik.bettersuggestions.mixin.ThreadedAnvilChunkStorageAccessor;
+import me.shurik.bettersuggestions.utils.ByteBufUtils;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.EntityTrackingListener;
 import net.minecraft.server.world.ServerChunkManager;
@@ -21,13 +21,11 @@ import java.util.stream.Collectors;
 
 public class ServerNetworking {
     public static PacketByteBuf createEntityCommandTagsBuffer(int entityId, Set<String> commandTags) {
-        // Calculate the capacity of the buffer to avoid resizing
-        // (4 bytes) [entity ID] + (4 bytes) [tag count] + sum(length of each tag)
-        int capacity = 4 * 2 + commandTags.stream().mapToInt(ByteBufUtil::utf8Bytes).sum();
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(capacity, capacity)).writeVarInt(entityId).writeVarInt(commandTags.size());
-        for (String tag : commandTags) buf.writeString(tag);
+        return ByteBufUtils.writeCollection(ByteBufUtils.withInt(entityId), commandTags, PacketByteBuf::writeString);
+    }
 
-        return buf;
+    public static PacketByteBuf createEntityScoresBuffer(int entityId, Collection<ScoreboardPlayerScore> scores) {
+        return ByteBufUtils.writeCollection(ByteBufUtils.withInt(entityId), scores, ByteBufUtils::writeScoreboardValue);
     }
 
     // Copy of Fabric PlayerLookup.tracking

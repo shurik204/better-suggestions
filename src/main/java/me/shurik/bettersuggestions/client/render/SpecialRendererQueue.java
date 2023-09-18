@@ -1,5 +1,6 @@
 package me.shurik.bettersuggestions.client.render;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import me.shurik.bettersuggestions.utils.ColorUtils;
@@ -68,86 +69,62 @@ public class SpecialRendererQueue {
     }
 
     public static class Queue<E extends Entry> implements Iterable<E> {
-        private final List<E> queue = Lists.newArrayList();
-        private final Map<String, List<E>> externalLists = Maps.newHashMap();
+        // Internal queue is cleared each pass
+        private final List<E> internalQueue = Lists.newArrayList();
+        private final Map<String, List<E>> externalQueueList = Maps.newHashMap();
 
         public void add(E entry) {
-            queue.add(entry);
+            internalQueue.add(entry);
         }
 
         public int size() {
-            return queue.size();
+            return internalQueue.size();
         }
 
         public void addList(String key, List<E> list) {
-            if (externalLists.containsKey(key)) {
+            if (externalQueueList.containsKey(key)) {
                 throw new IllegalArgumentException("List '" + key + "' already exists");
             }
-            externalLists.put(key, list);
+            externalQueueList.put(key, list);
         }
 
         public boolean listExists(String key) {
-            return externalLists.containsKey(key);
+            return externalQueueList.containsKey(key);
+        }
+
+        public boolean clearListIfExists(String key) {
+            if (externalQueueList.containsKey(key)) {
+                externalQueueList.get(key).clear();
+                return true;
+            }
+            return false;
         }
 
         public List<E> getList(String key) {
-            if (!externalLists.containsKey(key)) {
+            if (!externalQueueList.containsKey(key)) {
                 throw new IllegalArgumentException("List '" + key + "' does not exist");
             }
-            return externalLists.get(key);
+            return externalQueueList.get(key);
         }
 
         public void removeList(String key) {
-            externalLists.remove(key);
+            externalQueueList.remove(key);
         }
 
         public void clear() {
-            queue.clear();
+            internalQueue.clear();
         }
 
         public void clearAll() {
-            queue.clear();
-            externalLists.values().forEach(List::clear);
+            internalQueue.clear();
+            externalQueueList.values().forEach(List::clear);
         }
 
         @Override
         @NotNull
         public Iterator<E> iterator() {
-            return new Iterator<E>() {
-                private final Iterator<E> queueIterator = queue.iterator();
-                private final Iterator<Iterator<E>> externalListsIterator = externalLists.values().stream().map(List::iterator).iterator();
-                private Iterator<E> currentIterator = queueIterator;
-
-                private void findNextIterator() {
-                    while (!currentIterator.hasNext() && externalListsIterator.hasNext()) {
-                        currentIterator = externalListsIterator.next();
-                    }
-                }
-
-                @Override
-                public boolean hasNext() {
-                    // Current iterator has a next element
-                    if (currentIterator.hasNext()) {
-                        return true;
-                    } else {
-                        // Otherwise, find the next iterator
-                        findNextIterator();
-                        // And check if it has a next element
-                        return currentIterator.hasNext();
-                    }
-                }
-
-                @Override
-                public E next() {
-                    // Find the next element
-                    if (!hasNext()) {
-                        // If we didn't find any, throw an exception
-                        throw new IllegalStateException("No more elements");
-                    }
-                    // Return the next element
-                    return currentIterator.next();
-                }
-            };
+            // :pain:
+            return Iterables.concat(internalQueue, Iterables.concat(externalQueueList.values())).iterator();
         }
     }
 }

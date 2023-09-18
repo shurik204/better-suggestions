@@ -14,6 +14,7 @@ public class Scoreboards {
     public static ScoreboardObjective getObjective(String name) { return getInstance().getObjective(name); }
     public static ScoreboardPlayerScore getScore(String name, ScoreboardObjective objective) { return getInstance().getPlayerScore(name, objective); }
     public static Collection<ScoreboardPlayerScore> getScores(ScoreboardObjective objective) { return getInstance().getAllPlayerScores(objective); }
+    public static Collection<ScoreboardPlayerScore> getScores(String name) { return getInstance().getPlayerObjectives(name).values(); }
     public static void setScore(String name, ScoreboardObjective objective, int value) { getScore(name, objective).setScore(value); }
     //
 

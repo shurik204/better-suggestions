@@ -17,4 +17,5 @@ public class EntitySuggestionsConfig {
     public boolean showEntityPassengers = true;
     public boolean showEntityTeam = true;
     public boolean showEntityHealth = true;
+    public boolean showEntityScores = true;
 }

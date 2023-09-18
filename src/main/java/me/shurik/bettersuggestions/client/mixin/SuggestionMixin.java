@@ -5,14 +5,15 @@ import com.mojang.brigadier.Message;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import me.shurik.bettersuggestions.ModConstants;
+import me.shurik.bettersuggestions.client.Client;
 import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import me.shurik.bettersuggestions.client.access.CustomSuggestionAccessor;
+import me.shurik.bettersuggestions.client.data.ClientScoreboardValue;
 import me.shurik.bettersuggestions.client.utils.ClientUtils;
 import me.shurik.bettersuggestions.utils.StringUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.Registries;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Uuids;
@@ -69,16 +70,6 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
     public boolean isEntitySuggestion() { return entitySuggestion; }
     public boolean isPositionSuggestion() { return positionSuggestion; }
     public boolean isBlockPosSuggestion() { return blockPosSuggestion; }
-    private static void formatFirstPart(MutableText text) {
-        final boolean[] formatted = {false};
-        text.styled(style -> {
-            if (!formatted[0]) {
-                formatted[0] = true;
-                return style.withFormatting(Formatting.AQUA);
-            }
-            return style;
-        });
-    }
 
     public List<Text> getMultilineTooltip() {
         List<Text> tooltip = Lists.newArrayList();
@@ -109,7 +100,7 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
                     Set<String> tags = ((ClientEntityDataAccessor) entity).getClientCommandTags();
                     // No info
                     if (tags == null) {
-                        tooltip.add(Text.translatable("text.suggestion.tooltip.loading_tags").formatted(Formatting.GRAY));
+                        tooltip.add(Text.translatable("text.suggestion.tooltip.entity_tags.loading").formatted(Formatting.GRAY));
                     }
                     // Check if entity has any tags
                     else if (!tags.isEmpty()) {
@@ -150,6 +141,28 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
                             StringUtils.formatFloat(livingEntity.getHealth(), Formatting.RED),
                             StringUtils.formatFloat(livingEntity.getMaxHealth(), Formatting.RED)
                     ));
+                }
+
+                if (ModConstants.CONFIG.entitySuggestions.showEntityScores) {
+                    // Get entity tags
+                    Set<ClientScoreboardValue> scoreboardValues = ((ClientEntityDataAccessor) entity).getClientScoreboardValues();
+                    // No info & no server side
+                    if (!Client.SERVER_SIDE_PRESENT) {
+                        tooltip.add(StringUtils.formatTranslation("text.suggestion.tooltip.entity_scores.no_server_side", Formatting.GRAY));
+                    }
+                    else if (scoreboardValues == null) {
+                        tooltip.add(StringUtils.formatTranslation("text.suggestion.tooltip.entity_scores.loading", Formatting.GRAY));
+                    }
+                    // Check if entity has any scores
+                    else if (!scoreboardValues.isEmpty()) {
+                        tooltip.add(Text.translatable("text.suggestion.tooltip.entity_scores.first_layout",
+                                StringUtils.formatTranslation("text.suggestion.tooltip.entity_scores", Formatting.AQUA)
+                        ));
+                        tooltip.addAll(scoreboardValues.stream().map(value -> Text.translatable("text.suggestion.tooltip.entity_scores.layout",
+                                StringUtils.formatString(value.objective(), Formatting.GRAY),
+                                StringUtils.formatInt(value.score(), Formatting.YELLOW)
+                        )).toList());
+                    }
                 }
 
                 return tooltip;

@@ -10,7 +10,6 @@
     "ClientCommandSourceMixin",
     "ClientPlayNetworkHandlerMixin",
     "EntityRendererMixin",
-    "KeyboardMixin",
     "LanguageManagerMixin",
     "MinecraftClientMixin",
     "SuggestionMixin",

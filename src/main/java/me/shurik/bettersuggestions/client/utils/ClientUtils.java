@@ -2,6 +2,7 @@ package me.shurik.bettersuggestions.client.utils;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.EntityHitResult;
@@ -40,5 +41,9 @@ public class ClientUtils {
     @Nullable
     public static Entity getCrosshairTargetEntity() {
         return INSTANCE.crosshairTarget != null && INSTANCE.crosshairTarget.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) INSTANCE.crosshairTarget).getEntity() : null;
+    }
+
+    public static boolean isKeyPressed(int key) {
+        return InputUtil.isKeyPressed(INSTANCE.getWindow().getHandle(), key);
     }
 }
