@@ -1,22 +1,25 @@
 {
-	"required": true,
-	"package": "me.shurik.bettersuggestions.mixin.client",
-	"compatibilityLevel": "JAVA_17",
-	"client": [
-		"ClientCommandSourceMixin",
-		"ClientConnectionMixin",
-		"EntityRendererMixin",
-		"MinecraftClientMixin",
-		"SuggestionMixin",
-		"ArgumentTypeMixin",
-		"SuggestionWindowMixin",
-		"ChatInputSuggestorMixin",
-		"LanguageManagerMixin",
-		"ChatInputSuggestorAccessorMixin",
-		"TranslationStorageAccessorMixin",
-		"ClientPlayNetworkHandlerMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "package": "me.shurik.bettersuggestions.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "ArgumentTypeMixin",
+    "ChatInputSuggestorAccessorMixin",
+    "ChatInputSuggestorMixin",
+    "ChatScreenMixin",
+    "ClientCommandSourceMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "EntityRendererMixin",
+    "LanguageManagerMixin",
+    "MinecraftClientMixin",
+    "SuggestionMixin",
+    "SuggestionWindowMixin",
+    "TranslationStorageAccessorMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ClientEntityDataMixin"
+  ]
 }

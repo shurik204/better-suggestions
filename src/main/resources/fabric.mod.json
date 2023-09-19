@@ -20,10 +20,10 @@
 			"me.shurik.bettersuggestions.BetterSuggestionsMod"
 		],
 		"client": [
-			"me.shurik.bettersuggestions.BetterSuggestionsModClient"
+          "me.shurik.bettersuggestions.client.BetterSuggestionsModClient"
 		],
 		"modmenu": [
-			"me.shurik.bettersuggestions.integration.ModMenuIntegration"
+			"me.shurik.bettersuggestions.client.integration.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -33,7 +33,8 @@
 	"depends": {
 		"fabricloader": ">=0.14.17",
 		"java": ">=17",
-		"fabric-api": "*",
+		"fabric-networking-api-v1": "*",
+		"fabric-rendering-v1": "*",
 		"cloth-config": "*"
 	},
 	"suggests": {

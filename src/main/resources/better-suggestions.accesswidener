@@ -1,6 +1,9 @@
 accessWidener	v1 named
 mutable field net/minecraft/command/argument/ScoreHolderArgumentType SUGGESTION_PROVIDER Lcom/mojang/brigadier/suggestion/SuggestionProvider;
+mutable field net/minecraft/server/command/FunctionCommand SUGGESTION_PROVIDER Lcom/mojang/brigadier/suggestion/SuggestionProvider;
 accessible field net/minecraft/client/gui/screen/ChatInputSuggestor color I
 mutable field net/minecraft/entity/Entity commandTags Ljava/util/Set;
 accessible method net/minecraft/server/world/ServerWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
 mutable field net/minecraft/client/gui/screen/ChatInputSuggestor maxSuggestionSize I
+accessible field net/minecraft/client/gui/screen/ChatScreen chatField Lnet/minecraft/client/gui/widget/TextFieldWidget;
+accessible field net/minecraft/scoreboard/Scoreboard playerObjectives Ljava/util/Map;
