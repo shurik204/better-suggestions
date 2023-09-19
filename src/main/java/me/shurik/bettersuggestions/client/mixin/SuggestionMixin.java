@@ -34,13 +34,12 @@ import java.util.UUID;
 /**
  * Add information to suggestion tooltip.
  */
-@Mixin(Suggestion.class)
+@Mixin(value = Suggestion.class, remap = false)
 public class SuggestionMixin implements CustomSuggestionAccessor {
     @Final
-    @Shadow(remap = false)
+    @Shadow
     private String text;
 
-    @Shadow @Final private Message tooltip;
     private boolean entitySuggestion = false;
     private boolean blockPosSuggestion = false;
     private boolean positionSuggestion = false;
@@ -49,7 +48,7 @@ public class SuggestionMixin implements CustomSuggestionAccessor {
     private Vec3d suggestions$position = null;
     private BlockPos suggestions$blockPos = null;
 
-    @Inject(at=@At("RETURN"), method="<init>(Lcom/mojang/brigadier/context/StringRange;Ljava/lang/String;Lcom/mojang/brigadier/Message;)V", remap = false)
+    @Inject(at=@At("RETURN"), method="<init>(Lcom/mojang/brigadier/context/StringRange;Ljava/lang/String;Lcom/mojang/brigadier/Message;)V")
     private void init(final StringRange range, final String text, final Message tooltip, CallbackInfo info) {
         if (text == null) return;
 

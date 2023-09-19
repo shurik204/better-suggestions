@@ -1,10 +1,24 @@
 package me.shurik.bettersuggestions.event;
 
-import me.shurik.bettersuggestions.Server;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.server.MinecraftServer;
 
+/**
+ * Copy of ServerLifecycleEvents from Fabric API.
+ */
 public class ServerEvents {
-    public static void init() {
-		ServerLifecycleEvents.SERVER_STARTING.register((server) -> { Server.INSTANCE = server; });
+    /**
+     * Called before a Minecraft server reloads data packs.
+     */
+    public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD = EventFactory.createArrayBacked(StartDataPackReload.class, callbacks -> (server) -> {
+        for (StartDataPackReload callback : callbacks) {
+            callback.startDataPackReload(server);
+        }
+    });
+
+    @FunctionalInterface
+    public interface StartDataPackReload {
+        void startDataPackReload(MinecraftServer server);
     }
 }

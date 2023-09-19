@@ -7,6 +7,7 @@
     "EntityTrackerAccessor",
     "EntityTypeBuilderMixin",
     "MarkerEntityMixin",
+    "MinecraftServerMixin",
     "ThreadedAnvilChunkStorageAccessor"
   ],
   "injectors": {

@@ -1,14 +1,13 @@
 package me.shurik.bettersuggestions.suggestion;
 
-import net.minecraft.util.Identifier;
 import com.google.common.collect.Lists;
-import net.minecraft.command.CommandSource;
 import com.mojang.brigadier.context.CommandContext;
+import me.shurik.bettersuggestions.event.ServerEvents;
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.FunctionCommand;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.function.CommandFunctionManager;
-
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class FunctionArgumentTypeSuggestions {
         };
 
         // Mark the filtered function list to initialize when reloading datapacks
-        ServerLifecycleEvents.START_DATA_PACK_RELOAD.register((server, serverResourceManager) -> {
+        ServerEvents.START_DATA_PACK_RELOAD.register((server) -> {
             filteredFunctionListInitialized = false;
         });
     }

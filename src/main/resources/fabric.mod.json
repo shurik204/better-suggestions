@@ -35,7 +35,6 @@
 		"java": ">=17",
 		"fabric-networking-api-v1": "*",
 		"fabric-rendering-v1": "*",
-		"fabric-lifecycle-events-v1": "*",
 		"cloth-config": "*"
 	},
 	"suggests": {

@@ -1,6 +1,5 @@
 package me.shurik.bettersuggestions;
 
-import me.shurik.bettersuggestions.event.ServerEvents;
 import me.shurik.bettersuggestions.network.ServerPacketHandler;
 import me.shurik.bettersuggestions.suggestion.FunctionArgumentTypeSuggestions;
 import me.shurik.bettersuggestions.suggestion.ScoreHolderArgumentTypeSuggestions;
@@ -16,8 +15,6 @@ public class BetterSuggestionsMod implements ModInitializer {
 		// Init custom suggestions
 		ScoreHolderArgumentTypeSuggestions.init();
 		FunctionArgumentTypeSuggestions.init();
-		// Register server events
-		ServerEvents.init();
 		// Register server packet handler
 		ServerPacketHandler.init();
 
