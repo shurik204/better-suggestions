@@ -77,11 +77,11 @@ public class SpecialRenderer {
     public static void interactionHighlight(InteractionEntity interaction, Vector4f color, WorldRenderContext worldContext) {
         FullContext context = setupContext(worldContext, interaction);
 
-        double halfX = interaction.getBoundingBox().getXLength() / 2;
-        double halfZ = interaction.getBoundingBox().getZLength() / 2;
+        double halfX = interaction.getBoundingBox().getLengthX() / 2;
+        double halfZ = interaction.getBoundingBox().getLengthZ() / 2;
         // Box box = new Box(-halfX, 0, -halfZ, halfX, interaction.getBoundingBox().getYLength(), halfZ);
 
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -halfX, 0, -halfZ, halfX, interaction.getBoundingBox().getYLength(), halfZ, color.x, color.y, color.z, color.w);
+        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -halfX, 0, -halfZ, halfX, interaction.getBoundingBox().getLengthY(), halfZ, color.x, color.y, color.z, color.w);
         finishRendering(context);
     }
 
