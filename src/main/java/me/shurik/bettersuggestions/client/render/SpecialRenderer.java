@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.decoration.InteractionEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -76,12 +77,14 @@ public class SpecialRenderer {
 
     public static void interactionHighlight(InteractionEntity interaction, Vector4f color, WorldRenderContext worldContext) {
         FullContext context = setupContext(worldContext, interaction);
+        Box box = interaction.getBoundingBox();
 
-        double halfX = interaction.getBoundingBox().getLengthX() / 2;
-        double halfZ = interaction.getBoundingBox().getLengthZ() / 2;
-        // Box box = new Box(-halfX, 0, -halfZ, halfX, interaction.getBoundingBox().getYLength(), halfZ);
+        //                   getLengthX
+        double halfX = (box.maxX - box.minX) / 2;
+        //                   getLengthZ
+        double halfZ = (box.maxZ - box.minZ) / 2;
 
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -halfX, 0, -halfZ, halfX, interaction.getBoundingBox().getLengthY(), halfZ, color.x, color.y, color.z, color.w);
+        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -halfX, 0, -halfZ, halfX, box.maxY - box.minY, halfZ, color.x, color.y, color.z, color.w);
         finishRendering(context);
     }
 
