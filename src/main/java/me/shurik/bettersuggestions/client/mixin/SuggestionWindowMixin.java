@@ -41,7 +41,8 @@ import static me.shurik.bettersuggestions.ModConstants.CONFIG;
  * Highlight entities from suggestions
  * Sort suggestions
  */
-@Mixin(value = SuggestionWindow.class, priority = 999)
+@Mixin(value = SuggestionWindow.class, priority = 1001)
+//                                                1001 - fix incompatibility with Figura mod
 public class SuggestionWindowMixin {
     @Shadow
     private int inWindowIndex;
@@ -60,7 +61,10 @@ public class SuggestionWindowMixin {
     @Shadow
     private boolean completed;
 
+    @Unique
     private TextRenderer suggestions$textRenderer;
+    @Unique
+    private boolean suggestions$renderShiftTooltip;
 
     @Inject(at = @At("TAIL"), method = "<init>")
     void init(ChatInputSuggestor suggestor, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion, CallbackInfo info) {
@@ -126,12 +130,11 @@ public class SuggestionWindowMixin {
     @Nullable
     @Unique
     private CustomSuggestionAccessor customCurrentSuggestion;
-    
-    private boolean renderShiftTooltip;
+
     // HEAD
     @Inject(method = "render", at = @At("HEAD"))
     void renderPrepare(DrawContext context, int mouseX, int mouseY, CallbackInfo info) {
-        renderShiftTooltip = true;
+        suggestions$renderShiftTooltip = true;
         customCurrentSuggestion = null;
     }
 
@@ -171,7 +174,7 @@ public class SuggestionWindowMixin {
         if (tooltip != null) {
             context.drawTooltip(textRenderer, tooltip, x, y);
         }
-        renderShiftTooltip = false;
+        suggestions$renderShiftTooltip = false;
     }
 
     @Inject(method = "render", at = @At("TAIL"))
@@ -185,11 +188,11 @@ public class SuggestionWindowMixin {
 //        }
 
         // Render shift tooltip
-        if (renderShiftTooltip && Screen.hasShiftDown()) {
+        if (suggestions$renderShiftTooltip && Screen.hasShiftDown()) {
             List<Text> tooltip = customSuggestion.getMultilineTooltip();
             if (tooltip != null) {
                 //                                                                                                             get suggestion index in for loop
-                context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, Math.round(this.area.getY() + (12 * (this.selection - this.inWindowIndex)) - 10 * (tooltip.size() - 1) - 1));
+                context.drawTooltip(suggestions$textRenderer, tooltip, this.area.getX() - 5, this.area.getY() + (12 * (this.selection - this.inWindowIndex)) - 10 * (tooltip.size() - 1) - 1);
             }
         }
 
