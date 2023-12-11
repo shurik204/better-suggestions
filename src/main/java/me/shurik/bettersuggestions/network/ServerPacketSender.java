@@ -1,7 +1,7 @@
 package me.shurik.bettersuggestions.network;
 
 import me.shurik.bettersuggestions.ModConstants;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
+import me.shurik.bettersuggestions.utils.Scoreboards.ScoreboardScoreContainer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ public class ServerPacketSender {
         ServerNetworking.send(player, ModPackets.EntityCommandTagsS2CPacketResponseID, ServerNetworking.createEntityCommandTagsBuffer(entityId, commandTags));
     }
 
-    public static void sendEntityScoresResponse(ServerPlayerEntity player, int entityId, Collection<ScoreboardPlayerScore> scores) {
+    public static void sendEntityScoresResponse(ServerPlayerEntity player, int entityId, Collection<ScoreboardScoreContainer> scores) {
         if (ModConstants.DEBUG) {
             ModConstants.LOGGER.info("Sending scores for entity " + entityId + " (" + scores.size() + " scores)");
         }

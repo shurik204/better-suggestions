@@ -21,7 +21,7 @@ public class ClientCommandSourceMixin {
     @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
     private void suggestNearbyEntities(CallbackInfoReturnable<Collection<String>> info) {
         if (INSTANCE.world != null && INSTANCE.player != null) {
-            info.setReturnValue(INSTANCE.world.getOtherEntities(null, INSTANCE.player.getBoundingBox().expand(CONFIG.entitySuggestions.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
+            info.setReturnValue(INSTANCE.world.getOtherEntities(null, INSTANCE.player.getBoundingBox().expand(CONFIG.entitySuggestions.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getNameForScoreboard).toList());
         }
     }
 }

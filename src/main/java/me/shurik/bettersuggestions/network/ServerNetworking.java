@@ -1,11 +1,11 @@
 package me.shurik.bettersuggestions.network;
 
 import me.shurik.bettersuggestions.utils.ByteBufUtils;
+import me.shurik.bettersuggestions.utils.Scoreboards.ScoreboardScoreContainer;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -17,7 +17,7 @@ public class ServerNetworking {
         return ByteBufUtils.writeCollection(ByteBufUtils.withInt(entityId), commandTags, PacketByteBuf::writeString);
     }
 
-    public static PacketByteBuf createEntityScoresBuffer(int entityId, Collection<ScoreboardPlayerScore> scores) {
+    public static PacketByteBuf createEntityScoresBuffer(int entityId, Collection<ScoreboardScoreContainer> scores) {
         return ByteBufUtils.writeCollection(ByteBufUtils.withInt(entityId), scores, ByteBufUtils::writeScoreboardValue);
     }
 

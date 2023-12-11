@@ -1,27 +1,47 @@
 package me.shurik.bettersuggestions.utils;
 
 import me.shurik.bettersuggestions.Server;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
-import net.minecraft.scoreboard.ServerScoreboard;
+import net.minecraft.scoreboard.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Scoreboards {
+    public record ScoreboardScoreContainer(ScoreboardObjective objective, ReadableScoreboardScore score) {}
     // Base methods
     public static ServerScoreboard getInstance() { return Server.INSTANCE.getScoreboard(); }
     public static Collection<ScoreboardObjective> getObjectives() { return getInstance().getObjectives(); }
     @Nullable
     public static ScoreboardObjective getObjective(String name) { return getObjectives().stream().filter(objective -> objective.getName().equals(name)).findFirst().orElse(null); }
-    public static ScoreboardPlayerScore getScore(String name, ScoreboardObjective objective) { return getInstance().getPlayerScore(name, objective); }
-    public static Collection<ScoreboardPlayerScore> getScores(ScoreboardObjective objective) { return getInstance().getAllPlayerScores(objective); }
-    public static Collection<ScoreboardPlayerScore> getScores(String name) { return getInstance().getPlayerObjectives(name).values(); }
-    public static void setScore(String name, ScoreboardObjective objective, int value) { getScore(name, objective).setScore(value); }
+    @Nullable
+    public static ReadableScoreboardScore getScore(String name, ScoreboardObjective objective) { return getInstance().getScore(() -> name, objective); }
+
+    // Copy of Scoreboard.getScoreboardEntries(objective) with a few changes
+    public static Collection<ReadableScoreboardScore> getScores(ScoreboardObjective objective) {
+        List<ReadableScoreboardScore> scoreboardScores = new ArrayList<>();
+        getInstance().scores.forEach((scoreHolderName, scores) -> {
+            ScoreboardScore scoreboardScore = scores.get(objective);
+            if (scoreboardScore != null) {
+                scoreboardScores.add(scoreboardScore);
+            }
+        });
+        return scoreboardScores;
+    }
+    public static Collection<ScoreboardScoreContainer> getScores(String name) {
+        Collection<ScoreboardScoreContainer> scores = new ArrayList<>();
+        for (ScoreboardObjective objective : getObjectives()) {
+            ReadableScoreboardScore score = getScore(name, objective);
+            if (score != null) scores.add(new ScoreboardScoreContainer(objective, score));
+        }
+        return scores;
+    }
+    public static void setScore(String name, ScoreboardObjective objective, int value) { getInstance().getOrCreateScore(() -> name, objective).setScore(value); }
     //
 
     @Nullable
-    public static ScoreboardPlayerScore getScore(String name, String objectiveName) {
+    public static ReadableScoreboardScore getScore(String name, String objectiveName) {
         ScoreboardObjective objective = getObjective(objectiveName);
         if (objective == null) return null;
         return getScore(name, objective);

@@ -15,7 +15,9 @@ public class TextParser {
     @Nullable
     public static CompletionsContainer<TextCompletion> getCompletions(String json, SuggestionsBuilder builder) {
         try {
-            Text.Serializer.fromJson(builder.getInput().substring(builder.getStart()));
+            // Try parsing the input as a Text object
+            Text.Serialization.fromJson(builder.getInput().substring(builder.getStart()));
+            // if successful, don't suggest anything
             return null;
         } catch (Exception ignored) {}
 

@@ -6,4 +6,5 @@ mutable field net/minecraft/entity/Entity commandTags Ljava/util/Set;
 accessible method net/minecraft/server/world/ServerWorld getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
 mutable field net/minecraft/client/gui/screen/ChatInputSuggestor maxSuggestionSize I
 accessible field net/minecraft/client/gui/screen/ChatScreen chatField Lnet/minecraft/client/gui/widget/TextFieldWidget;
-accessible field net/minecraft/scoreboard/Scoreboard playerObjectives Ljava/util/Map;
+accessible field net/minecraft/scoreboard/Scoreboard scores Ljava/util/Map;
+accessible class net/minecraft/scoreboard/Scores

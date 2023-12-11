@@ -18,7 +18,7 @@ public interface CommandSourceMixin {
     @Inject(at = @At("HEAD"), method = "getEntitySuggestions", cancellable = true)
     default void getEntitySuggestions(CallbackInfoReturnable<Collection<String>> info) {
         if (((Object) this) instanceof ServerCommandSource serverCommandSource) {
-            info.setReturnValue(serverCommandSource.getWorld().getOtherEntities(null, serverCommandSource.getPlayer().getBoundingBox().expand(ModConstants.CONFIG.entitySuggestions.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getEntityName).toList());
+            info.setReturnValue(serverCommandSource.getWorld().getOtherEntities(null, serverCommandSource.getPlayer().getBoundingBox().expand(ModConstants.CONFIG.entitySuggestions.entitySuggestionRadius), (entity) -> !(entity instanceof PlayerEntity)).stream().map(Entity::getNameForScoreboard).toList());
         }
     }
 }

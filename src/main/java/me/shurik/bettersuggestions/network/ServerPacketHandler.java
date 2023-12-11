@@ -36,7 +36,7 @@ public class ServerPacketHandler {
             int entityId = buf.readInt();
             Entity entity = player.getServerWorld().getEntityById(entityId);
             if (entity != null) {
-                ServerPacketSender.sendEntityScoresResponse(player, entityId, Scoreboards.getScores(entity.getEntityName()));
+                ServerPacketSender.sendEntityScoresResponse(player, entityId, Scoreboards.getScores(entity.getNameForScoreboard()));
             }
         }
     }
