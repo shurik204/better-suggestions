@@ -73,7 +73,6 @@ public class ChatInputSuggestorMixin {
             if (parsedArgument.getResult() instanceof DefaultPosArgument) {
                 // TODO: Ask server to get defaultPosArgument.toAbsolutePos() instead of parsing it on the client
                 String posString = parsedArgument.getRange().get(parse.getReader());
-                System.out.println(posString);
                 if (StringUtils.isBlockPos(posString)) {
                     BlockPos pos = StringUtils.parseBlockPos(parsedArgument.getRange().get(parse.getReader()));
                     blockRenderQueue.add(new SpecialRendererQueue.BlockEntry(pos, getColorForIndex(blockRenderQueue.size())));

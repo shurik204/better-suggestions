@@ -27,7 +27,7 @@
     "text.autoconfig.better-suggestions.category.server": "Permissions",
     "text.autoconfig.better-suggestions.option.maxSuggestionsShown": "How many suggestions to show",
     "text.autoconfig.better-suggestions.option.highlightCoordinates": "Show coordinates in world",
-    "text.autoconfig.better-suggestions.option.highlightCoordinates.@Tooltip[0]": "Highlight blocks and coordinates from commands",
+    "text.autoconfig.better-suggestions.option.highlightCoordinates.@Tooltip": "Highlight blocks and coordinates while typing",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape": "Remember chat command",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[0]": "Restores command after closing chat with escape",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[1]": "(Use Shift + Escape to temporarily disable)",
