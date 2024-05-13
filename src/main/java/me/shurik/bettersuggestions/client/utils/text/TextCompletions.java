@@ -2,14 +2,17 @@ package me.shurik.bettersuggestions.client.utils.text;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
+import me.shurik.bettersuggestions.ModConstants;
 import me.shurik.bettersuggestions.client.mixin.TranslationStorageAccessorMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.util.Language;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -138,7 +141,19 @@ public class TextCompletions {
     public static final List<String> TRANSLATION_CACHE = Lists.newArrayList();
     public static List<TextCompletion> translationCompletions(String input) {
         if (TRANSLATION_CACHE.isEmpty()) {
-            Set<String> keys = ((TranslationStorageAccessorMixin) Language.getInstance()).getTranslations().keySet();
+            Language language = Language.getInstance();
+            if (language.getClass().getCanonicalName().startsWith("xyz.nucleoid.server.translations")) {
+                ModConstants.LOGGER.info("NucleoidMC Server-Translations API detected!");
+                try {
+                    Field vanillaLang = language.getClass().getDeclaredField("vanilla");
+                    vanillaLang.setAccessible(true);
+                    language = (Language) vanillaLang.get(language);
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    throw new RuntimeException("Failed to retrieve TranslationStorage. Expected: " + TranslationStorage.class.getCanonicalName() + ", got: " + language.getClass().getCanonicalName());
+                }
+            }
+
+            Set<String> keys = ((TranslationStorageAccessorMixin) language).getTranslations().keySet();
             keys.forEach((key) -> TRANSLATION_CACHE.add("\"" + key + "\""));
         }
 
