@@ -30,7 +30,7 @@ public class TextParser {
             // client.player.sendMessage(Text.of("Parsed successfully!"), false);
         } catch (IOException e) {
             // client.inGameHud.getChatHud().addMessage(Text.of("IOException: " + e.getClass().getName() + " | " + e.getMessage()));
-            e.printStackTrace();
+            // e.printStackTrace();
         } catch (StopParsingException e) {
             // client.inGameHud.getChatHud().addMessage(Text.of("Suggestions: " + e.getSuggestions()));
             // client.inGameHud.getChatHud().addMessage(Text.of("Reason: " + e.getReason()));
