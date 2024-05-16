@@ -31,8 +31,8 @@
 		"better-suggestions.client.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.14.17",
-		"java": ">=17",
+		"fabricloader": ">=0.15.11",
+		"java": ">=21",
 		"fabric-networking-api-v1": "*",
 		"fabric-rendering-v1": "*",
 		"cloth-config": "*"

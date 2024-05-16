@@ -1,6 +1,9 @@
 package me.shurik.bettersuggestions.network;
 
 import me.shurik.bettersuggestions.ModConstants;
+import me.shurik.bettersuggestions.interfaces.ScoreboardValue;
+import me.shurik.bettersuggestions.network.packets.EntityCommandTagsResponseS2CPacket;
+import me.shurik.bettersuggestions.network.packets.EntityScoresResponseS2CPacket;
 import me.shurik.bettersuggestions.utils.Scoreboards.ScoreboardScoreContainer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -12,13 +15,13 @@ public class ServerPacketSender {
         if (ModConstants.DEBUG) {
             ModConstants.LOGGER.info("Sending command tags for entity " + entityId + " (" + commandTags.size() + " tags)");
         }
-        ServerNetworking.send(player, ModPackets.EntityCommandTagsS2CPacketResponseID, ServerNetworking.createEntityCommandTagsBuffer(entityId, commandTags));
+        ServerNetworking.send(player, new EntityCommandTagsResponseS2CPacket(entityId, commandTags));
     }
 
-    public static void sendEntityScoresResponse(ServerPlayerEntity player, int entityId, Collection<ScoreboardScoreContainer> scores) {
+    public static void sendEntityScoresResponse(ServerPlayerEntity player, int entityId, Collection<? extends ScoreboardValue> scores) {
         if (ModConstants.DEBUG) {
             ModConstants.LOGGER.info("Sending scores for entity " + entityId + " (" + scores.size() + " scores)");
         }
-        ServerNetworking.send(player, ModPackets.EntityScoresS2CPacketResponseID, ServerNetworking.createEntityScoresBuffer(entityId, scores));
+        ServerNetworking.send(player, new EntityScoresResponseS2CPacket(entityId, scores));
     }
 }

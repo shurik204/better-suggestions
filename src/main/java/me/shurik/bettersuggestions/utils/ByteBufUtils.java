@@ -3,8 +3,7 @@ package me.shurik.bettersuggestions.utils;
 import io.netty.buffer.Unpooled;
 import io.netty.util.CharsetUtil;
 import me.shurik.bettersuggestions.client.data.ClientScoreboardValue;
-import me.shurik.bettersuggestions.utils.Scoreboards.ScoreboardScoreContainer;
-
+import me.shurik.bettersuggestions.interfaces.ScoreboardValue;
 import net.minecraft.network.PacketByteBuf;
 
 import java.util.ArrayList;
@@ -29,10 +28,10 @@ public class ByteBufUtils {
         return new PacketByteBuf(Unpooled.copyInt(i));
     }
 
-    public static void writeScoreboardValue(PacketByteBuf buf, ScoreboardScoreContainer container) {
+    public static void writeScoreboardValue(PacketByteBuf buf, ScoreboardValue container) {
         // Why tf getObjective() is nullable, if it's clearly not?
-        buf.writeString(container.objective().getName());
-        buf.writeInt(container.score().getScore());
+        buf.writeString(container.getObjective());
+        buf.writeInt(container.getScore());
     }
 
     public static ClientScoreboardValue readScoreboardValue(PacketByteBuf buf) {

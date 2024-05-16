@@ -34,7 +34,7 @@ public class TextArgumentSuggestions {
             return builder.buildFuture();
         }
         
-        CompletionsContainer<TextCompletion> completions = TextParser.getCompletions(input, builder);
+        CompletionsContainer<TextCompletion> completions = TextParser.getCompletions(input, context, builder);
         if (completions != null) {
             builder = builder.createOffset(builder.getStart() + builder.getRemaining().length() - completions.getOffset());
             for (TextCompletion completion : completions) {

@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 
-
 public class ClientEvents {
     public static void init() {
         // Special cases for rendering highlighted entities
@@ -28,7 +27,7 @@ public class ClientEvents {
         C2SPlayChannelEvents.REGISTER.register((handler, sender, client, channels) -> {
             if (Client.SERVER_SIDE_PRESENT) return;
 
-            Client.SERVER_SIDE_PRESENT = channels.contains(ModPackets.ModPresenceBeacon);
+            Client.SERVER_SIDE_PRESENT = channels.contains(ModPackets.ModPresenceBeacon.id());
             if (Client.SERVER_SIDE_PRESENT) {
                 Client.LOGGER.info("Detected mod installed on server");
             }
