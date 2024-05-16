@@ -1,7 +1,5 @@
 package me.shurik.bettersuggestions.utils;
 
-import io.netty.buffer.Unpooled;
-import io.netty.util.CharsetUtil;
 import me.shurik.bettersuggestions.client.data.ClientScoreboardValue;
 import me.shurik.bettersuggestions.interfaces.ScoreboardValue;
 import net.minecraft.network.PacketByteBuf;
@@ -15,19 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ByteBufUtils {
-    private static final PacketByteBuf emptyBuffer = new PacketByteBuf(Unpooled.EMPTY_BUFFER);
-    public static PacketByteBuf empty() {
-        return emptyBuffer;
-    }
-
-    public static PacketByteBuf withString(String string) {
-        return new PacketByteBuf(Unpooled.copiedBuffer(string, CharsetUtil.UTF_8));
-    }
-
-    public static PacketByteBuf withInt(int i) {
-        return new PacketByteBuf(Unpooled.copyInt(i));
-    }
-
     public static void writeScoreboardValue(PacketByteBuf buf, ScoreboardValue container) {
         // Why tf getObjective() is nullable, if it's clearly not?
         buf.writeString(container.getObjective());
