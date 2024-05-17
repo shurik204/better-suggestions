@@ -3,11 +3,10 @@ package me.shurik.bettersuggestions.client.event;
 import me.shurik.bettersuggestions.client.Client;
 import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
-import me.shurik.bettersuggestions.network.ModPackets;
+import me.shurik.bettersuggestions.network.packet.ModPresenceBeaconPacket;
 import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-
 
 public class ClientEvents {
     public static void init() {
@@ -28,7 +27,7 @@ public class ClientEvents {
         C2SPlayChannelEvents.REGISTER.register((handler, sender, client, channels) -> {
             if (Client.SERVER_SIDE_PRESENT) return;
 
-            Client.SERVER_SIDE_PRESENT = channels.contains(ModPackets.ModPresenceBeacon);
+            Client.SERVER_SIDE_PRESENT = channels.contains(ModPresenceBeaconPacket.ID.id());
             if (Client.SERVER_SIDE_PRESENT) {
                 Client.LOGGER.info("Detected mod installed on server");
             }

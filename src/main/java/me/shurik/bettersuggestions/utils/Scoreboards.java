@@ -9,7 +9,22 @@ import java.util.Collection;
 import java.util.List;
 
 public class Scoreboards {
-    public record ScoreboardScoreContainer(ScoreboardObjective objective, ReadableScoreboardScore score) {}
+    public interface ScoreboardValue {
+        String getObjective();
+        int getScore();
+    }
+
+    public record ScoreboardScoreContainer(ScoreboardObjective objective, ReadableScoreboardScore score) implements ScoreboardValue {
+        @Override
+        public String getObjective() {
+            return objective.getName();
+        }
+
+        @Override
+        public int getScore() {
+            return score.getScore();
+        }
+    }
     // Base methods
     public static ServerScoreboard getInstance() { return Server.INSTANCE.getScoreboard(); }
     public static Collection<ScoreboardObjective> getObjectives() { return getInstance().getObjectives(); }

@@ -1,29 +1,37 @@
 package me.shurik.bettersuggestions.network;
 
 import me.shurik.bettersuggestions.ModConstants;
+import me.shurik.bettersuggestions.network.packet.*;
 import me.shurik.bettersuggestions.utils.Scoreboards;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public class ServerPacketHandler {
     private static boolean hasPermissions(ServerPlayerEntity player) { return !ModConstants.CONFIG.server.requireOpToRequestData || player.hasPermissionLevel(1); }
     public static void init() {
-        ServerPlayNetworking.registerGlobalReceiver(ModPackets.ModPresenceBeacon, (server, player, handler, buf, responseSender) -> {
+        // One of the registrations is likely unnecessary
+        PayloadTypeRegistry.playS2C().register(ModPresenceBeaconPacket.ID, ModPresenceBeaconPacket.CODEC);
+        PayloadTypeRegistry.playC2S().register(ModPresenceBeaconPacket.ID, ModPresenceBeaconPacket.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(ModPresenceBeaconPacket.ID, (packet, context) -> {
             // Do nothing
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(ModPackets.EntityCommandTagsRequestC2SPacketID, ServerPacketHandler::receiveCommandTagsRequest);
-        ServerPlayNetworking.registerGlobalReceiver(ModPackets.EntityScoresRequestC2SPacketID, ServerPacketHandler::receiveScoresRequest);
+        PayloadTypeRegistry.playC2S().register(EntityCommandTagsRequestC2SPacket.ID, EntityCommandTagsRequestC2SPacket.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(EntityCommandTagsRequestC2SPacket.ID, ServerPacketHandler::receiveCommandTagsRequest);
+
+        PayloadTypeRegistry.playC2S().register(EntityScoresRequestC2SPacket.ID, EntityScoresRequestC2SPacket.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(EntityScoresRequestC2SPacket.ID, ServerPacketHandler::receiveScoresRequest);
+
+        PayloadTypeRegistry.playS2C().register(EntityCommandTagsResponseS2CPacket.ID, EntityCommandTagsResponseS2CPacket.CODEC);
+        PayloadTypeRegistry.playS2C().register(EntityScoresResponseS2CPacket.ID, EntityScoresResponseS2CPacket.CODEC);
     }
 
-    private static void receiveCommandTagsRequest(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    private static void receiveCommandTagsRequest(EntityCommandTagsRequestC2SPacket packet, ServerPlayNetworking.Context context) {
+        ServerPlayerEntity player = context.player();
         if (hasPermissions(player)) {
-            int entityId = buf.readInt();
+            int entityId = packet.entityId();
             Entity entity = player.getServerWorld().getEntityById(entityId);
             if (entity != null) {
                 ServerPacketSender.sendEntityCommandTagsResponse(player, entityId, entity.getCommandTags());
@@ -31,9 +39,10 @@ public class ServerPacketHandler {
         }
     }
 
-    private static void receiveScoresRequest(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+    private static void receiveScoresRequest(EntityScoresRequestC2SPacket packet, ServerPlayNetworking.Context context) {
+        ServerPlayerEntity player = context.player();
         if (hasPermissions(player)) {
-            int entityId = buf.readInt();
+            int entityId = packet.entityId();
             Entity entity = player.getServerWorld().getEntityById(entityId);
             if (entity != null) {
                 ServerPacketSender.sendEntityScoresResponse(player, entityId, Scoreboards.getScores(entity.getNameForScoreboard()));

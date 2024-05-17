@@ -20,9 +20,9 @@ public class ClientPlayNetworkHandlerMixin {
     void captureSuggestions(CommandSuggestionsS2CPacket packet, CallbackInfo info) {
         // Abusing completion packet to store entity id
         // Hopefully no one else uses this or spawns more than a billion entities lol
-        if (packet.getCompletionId() < -1_000_000_000 && packet.getCompletionId() > -2_000_000_000) {
+        if (packet.id() < -1_000_000_000 && packet.id() > -2_000_000_000) {
             // Convert back
-            int entityId = -packet.getCompletionId() - 1_000_000_000;
+            int entityId = -packet.id() - 1_000_000_000;
             // Remove from pending requests
             ClientDataGetter.pendingTagRequests.remove(entityId);
             // Get entity

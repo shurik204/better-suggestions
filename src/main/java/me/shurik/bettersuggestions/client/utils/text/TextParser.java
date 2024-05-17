@@ -1,10 +1,12 @@
 package me.shurik.bettersuggestions.client.utils.text;
 
 import com.google.gson.*;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.shurik.bettersuggestions.client.utils.CompletionsContainer;
 import me.shurik.bettersuggestions.client.utils.text.TextCompletions.TextCompletion;
 import me.shurik.bettersuggestions.utils.CustomJsonReader;
+import net.minecraft.command.CommandSource;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,10 +15,13 @@ import java.io.IOException;
 
 public class TextParser {
     @Nullable
-    public static CompletionsContainer<TextCompletion> getCompletions(String json, SuggestionsBuilder builder) {
+    public static <S> CompletionsContainer<TextCompletion> getCompletions(String json, CommandContext<S> context, SuggestionsBuilder builder) {
         try {
             // Try parsing the input as a Text object
-            Text.Serialization.fromJson(builder.getInput().substring(builder.getStart()));
+            S source = context.getSource();
+            if (source instanceof CommandSource cs) {
+                Text.Serialization.fromJson(builder.getInput().substring(builder.getStart()), cs.getRegistryManager());
+            }
             // if successful, don't suggest anything
             return null;
         } catch (Exception ignored) {}

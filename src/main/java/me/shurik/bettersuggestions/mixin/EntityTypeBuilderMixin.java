@@ -20,7 +20,7 @@ public class EntityTypeBuilderMixin<T extends Entity> {
     
     @Inject(at = @At("TAIL"), method = "maxTrackingRange")
     public void maxTrackingRange(int maxTrackRange, CallbackInfoReturnable<EntityType.Builder<?>> info) {
-        if (maxTrackRange == 0 && dimensions.width == 0.0F && dimensions.height == 0.0F) {
+        if (maxTrackRange == 0 && dimensions.width() == 0.0F && dimensions.height() == 0.0F) {
             maxTrackingRange = 6;
             dimensions = EntityDimensions.fixed(0.0F, 0.0F);
         }

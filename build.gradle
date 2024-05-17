@@ -1,11 +1,11 @@
 plugins {
-	id 'fabric-loom' version '1.4-SNAPSHOT'
+	id 'fabric-loom' version '1.6-SNAPSHOT'
 	id 'maven-publish'
 	
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
 version = project.mod_version
@@ -38,10 +38,8 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-	// Uncomment the following line to enable the deprecated Fabric API modules. 
-	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
-
-	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
+	modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+	modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 
 loom {
@@ -57,7 +55,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {

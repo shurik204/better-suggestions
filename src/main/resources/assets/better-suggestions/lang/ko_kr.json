@@ -27,7 +27,7 @@
     "text.autoconfig.better-suggestions.category.server": "권한",
     "text.autoconfig.better-suggestions.option.maxSuggestionsShown": "표시할 명령어 제안들 최대 개수",
     "text.autoconfig.better-suggestions.option.highlightCoordinates": "좌표를 월드에 보여주기",
-    "text.autoconfig.better-suggestions.option.highlightCoordinates.@Tooltip[0]": "명령어에서 블록과 좌표를 표시합니다",
+    "text.autoconfig.better-suggestions.option.highlightCoordinates.@Tooltip": "입력하는 동안 블록 및 좌표 강조 표시합니다.",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape": "대화창 내 명령어 기억하기",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[0]": "Esc를 눌러서 닫힌 대화창의 명령어를 복구합니다",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[1]": "(Shift + Escape를 눌러서 임시로 비활성화할 수 있습니다)",
