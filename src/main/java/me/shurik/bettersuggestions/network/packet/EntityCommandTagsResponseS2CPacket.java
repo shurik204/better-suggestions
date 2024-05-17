@@ -1,6 +1,6 @@
-package me.shurik.bettersuggestions.network.packets;
+package me.shurik.bettersuggestions.network.packet;
 
-import me.shurik.bettersuggestions.network.ModPackets;
+import me.shurik.bettersuggestions.BetterSuggestionsMod;
 import me.shurik.bettersuggestions.utils.ByteBufUtils;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -10,7 +10,8 @@ import java.util.Set;
 
 public record EntityCommandTagsResponseS2CPacket(int entityId, Set<String> commandTags) implements CustomPayload {
     public static final PacketCodec<PacketByteBuf, EntityCommandTagsResponseS2CPacket> CODEC
-            = PacketCodec.of(EntityCommandTagsResponseS2CPacket::write, EntityCommandTagsResponseS2CPacket::new);
+            = PacketCodec.of(EntityCommandTagsResponseS2CPacket::write, EntityCommandTagsResponseS2CPacket::new).cast();
+    public static final Id<EntityCommandTagsResponseS2CPacket> ID = new Id<>(BetterSuggestionsMod.id("entity_tags_response"));
 
     public EntityCommandTagsResponseS2CPacket(PacketByteBuf buf) {
         this(buf.readInt(), ByteBufUtils.readSet(buf, PacketByteBuf::readString));
@@ -23,6 +24,6 @@ public record EntityCommandTagsResponseS2CPacket(int entityId, Set<String> comma
 
     @Override
     public Id<? extends CustomPayload> getId() {
-        return ModPackets.EntityCommandTagsResponseS2CPacketID;
+        return ID;
     }
 }

@@ -4,24 +4,15 @@ import me.shurik.bettersuggestions.ModConstants;
 import me.shurik.bettersuggestions.client.Client;
 import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import me.shurik.bettersuggestions.client.data.ClientDataGetter;
-import me.shurik.bettersuggestions.network.ModPackets;
-import me.shurik.bettersuggestions.network.packets.EntityCommandTagsResponseS2CPacket;
-import me.shurik.bettersuggestions.network.packets.EntityScoresResponseS2CPacket;
-import me.shurik.bettersuggestions.utils.ByteBufUtils;
+import me.shurik.bettersuggestions.network.packet.EntityCommandTagsResponseS2CPacket;
+import me.shurik.bettersuggestions.network.packet.EntityScoresResponseS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketByteBuf;
 
 public class ClientPacketHandler {
     public static void init() {
-        PayloadTypeRegistry.playS2C().register(ModPackets.EntityCommandTagsResponseS2CPacketID, EntityCommandTagsResponseS2CPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.EntityCommandTagsResponseS2CPacketID, ClientPacketHandler::receiveEntityCommandTagsUpdate);
-        PayloadTypeRegistry.playS2C().register(ModPackets.EntityScoresResponseS2CPacketID, EntityScoresResponseS2CPacket.CODEC);
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.EntityScoresResponseS2CPacketID, ClientPacketHandler::receiveEntityScoresUpdate);
+        ClientPlayNetworking.registerGlobalReceiver(EntityCommandTagsResponseS2CPacket.ID, ClientPacketHandler::receiveEntityCommandTagsUpdate);
+        ClientPlayNetworking.registerGlobalReceiver(EntityScoresResponseS2CPacket.ID, ClientPacketHandler::receiveEntityScoresUpdate);
     }
 
     private static void receiveEntityCommandTagsUpdate(EntityCommandTagsResponseS2CPacket packet, ClientPlayNetworking.Context context) {

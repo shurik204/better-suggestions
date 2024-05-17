@@ -1,7 +1,6 @@
 package me.shurik.bettersuggestions.utils;
 
 import me.shurik.bettersuggestions.client.data.ClientScoreboardValue;
-import me.shurik.bettersuggestions.interfaces.ScoreboardValue;
 import net.minecraft.network.PacketByteBuf;
 
 import java.util.ArrayList;
@@ -13,8 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ByteBufUtils {
-    public static void writeScoreboardValue(PacketByteBuf buf, ScoreboardValue container) {
-        // Why tf getObjective() is nullable, if it's clearly not?
+    public static void writeScoreboardValue(PacketByteBuf buf, Scoreboards.ScoreboardValue container) {
         buf.writeString(container.getObjective());
         buf.writeInt(container.getScore());
     }

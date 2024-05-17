@@ -1,7 +1,6 @@
 package me.shurik.bettersuggestions.utils;
 
 import me.shurik.bettersuggestions.Server;
-import me.shurik.bettersuggestions.interfaces.ScoreboardValue;
 import net.minecraft.scoreboard.*;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,6 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class Scoreboards {
+    public interface ScoreboardValue {
+        String getObjective();
+        int getScore();
+    }
+
     public record ScoreboardScoreContainer(ScoreboardObjective objective, ReadableScoreboardScore score) implements ScoreboardValue {
         @Override
         public String getObjective() {
