@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.shurik.bettersuggestions.ModConstants.CONFIG;
@@ -70,7 +71,16 @@ public class SuggestionWindowMixin {
     void init(ChatInputSuggestor suggestor, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion, CallbackInfo info) {
         ChatInputSuggestorAccessorMixin suggestorAccessor = (ChatInputSuggestorAccessorMixin) suggestor;
         this.suggestions$textRenderer = suggestorAccessor.getTextRenderer();
-        
+
+        // Try modifying the suggestions list
+        try {
+            // https://stackoverflow.com/questions/8364856/how-to-test-if-a-list-extends-object-is-an-unmodifablelist
+            this.suggestions.addAll(Collections.emptyList());
+        } catch (UnsupportedOperationException e) {
+            // Silently exit if the list is unmodifiable
+            return;
+        }
+
         // TODO: add color customization for chat and cmd block input
         // suggestor.owner instanceof ChatScreen and suggestor.owner instanceof AbstractCommandBlockScreen
         // if (suggestorAccessor.getOwner() instanceof ChatScreen) {
@@ -119,7 +129,7 @@ public class SuggestionWindowMixin {
                 otherSuggestions.add(suggestion);
             }
         }
-        
+
         this.suggestions.clear();
         this.suggestions.addAll(prioritizedSuggestions);
         this.suggestions.addAll(otherSuggestions);
