@@ -72,6 +72,9 @@ dependencies {
 	modImplementation(fabricApiModule("fabric-networking-api-v1"))
 	modImplementation(fabricApiModule("fabric-rendering-v1"))
 
+	// Other mods might need different modules
+	modRuntimeOnly(fabricApiModule("fabric-api"))
+
 	modApi("com.terraformersmc:modmenu:${property("deps.modMenu")}")
 
 	modApi("me.shedaniel.cloth:cloth-config-fabric:${property("deps.clothConfig")}") {
