@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
 	"id": "better-suggestions",
-	"version": "${version}",
-	"name": "Better Suggestions",
-	"description": "Makes Minecraft command suggestions more useful.",
+	"version": "${modVersion}",
+	"name": "${modName}",
+	"description": "${modDescription}",
 	"authors": [
 		"shurik204"
 	],
@@ -20,7 +20,7 @@
 			"me.shurik.bettersuggestions.BetterSuggestionsMod"
 		],
 		"client": [
-			"me.shurik.bettersuggestions.client.BetterSuggestionsModClient"
+          "me.shurik.bettersuggestions.client.BetterSuggestionsModClient"
 		],
 		"modmenu": [
 			"me.shurik.bettersuggestions.client.integration.ModMenuIntegration"
@@ -31,13 +31,10 @@
 		"better-suggestions.client.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.15.11",
-		"java": ">=21",
+		"java": ">=${modJava}",
+		"fabricloader": ">=${modLoader}",
 		"fabric-networking-api-v1": "*",
 		"fabric-rendering-v1": "*",
 		"cloth-config": "*"
-	},
-	"suggests": {
-		"suggestion-tweaker": "*"
 	}
 }
