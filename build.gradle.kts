@@ -142,22 +142,26 @@ tasks {
 	}
 
 	publishing {
-		publications {
-			create<MavenPublication>("jar") {
-				repositories {
-					maven(System.getenv("MAVEN_URL")) {
-						credentials {
-							username=System.getenv("MAVEN_USER")
-							password=System.getenv("MAVEN_PASSWORD")
+		if (System.getenv("MAVEN_URL") != null) {
+			publications {
+				create<MavenPublication>("jar") {
+					repositories {
+						maven(System.getenv("MAVEN_URL")) {         // Maven repository URL
+							credentials {
+								username=System.getenv("MAVEN_USER")
+								password=System.getenv("MAVEN_PASSWORD")
+							}
 						}
 					}
-				}
-				groupId = group
-				artifactId = modId
+					groupId = group
+					artifactId = modId
 
-				// Includes jar, sources and dependencies
-				from(project.components["java"])
+					// Includes jar, sources and dependencies
+					from(project.components["java"])
+				}
 			}
+		} else {
+			logger.warn("[!] Maven URL is not set, skipped setting up Maven publishing.")
 		}
 	}
 
