@@ -23,6 +23,6 @@ public class BetterSuggestionsMod implements ModInitializer {
 	}
 
 	public static Identifier id(String path) {
-		return new Identifier(ModConstants.MOD_ID, path);
+		return Identifier.of(ModConstants.MOD_ID, path);
 	}
 }

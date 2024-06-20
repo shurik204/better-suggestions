@@ -7,6 +7,7 @@ import me.shurik.bettersuggestions.network.packet.ModPresenceBeaconPacket;
 import net.fabricmc.fabric.api.client.networking.v1.C2SPlayChannelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.util.math.BlockPos;
 
 public class ClientEvents {
     public static void init() {
@@ -15,6 +16,7 @@ public class ClientEvents {
             if (Client.INSTANCE.world != null) {
                 SpecialRendererQueue.processQueue(worldrendercontext);
             }
+            SpecialRendererQueue.addBlock(new BlockPos(0,0,0));
         });
 
         // Clear entity highlight information after rendering

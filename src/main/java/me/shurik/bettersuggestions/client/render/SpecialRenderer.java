@@ -29,9 +29,7 @@ public class SpecialRenderer {
         context.matrixStack().translate(dx, dy, dz);
 
         Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
-
-		bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+		BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
         return new FullContext(context, tessellator, bufferBuilder, context.matrixStack());
     }
@@ -42,10 +40,10 @@ public class SpecialRenderer {
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
-    
-        context.tessellator.draw();
-    
+        RenderSystem.depthFunc(GL11.GL_ALWAYS); 
+
+        BufferRenderer.drawWithGlobalProgram(context.bufferBuilder.end());
+
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
