@@ -2,13 +2,14 @@ package me.shurik.bettersuggestions.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.client.gl.ShaderProgram;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.decoration.InteractionEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
@@ -37,16 +38,17 @@ public class SpecialRenderer {
     private static void finishRendering(FullContext context) {
         context.matrices.pop();
 
-        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-        RenderSystem.enableBlend();
-        RenderSystem.disableCull();
-        RenderSystem.depthFunc(GL11.GL_ALWAYS); 
+        try (ShaderProgram shader = RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR)) {
+            RenderSystem.enableBlend();
+            RenderSystem.disableCull();
+            RenderSystem.depthFunc(GL11.GL_ALWAYS);
 
-        BufferRenderer.drawWithGlobalProgram(context.bufferBuilder.end());
+            BufferRenderer.draw(context.bufferBuilder.end());
 
-        RenderSystem.depthFunc(GL11.GL_LEQUAL);
-        RenderSystem.enableCull();
-        RenderSystem.disableBlend();
+            RenderSystem.depthFunc(GL11.GL_LEQUAL);
+            RenderSystem.enableCull();
+            RenderSystem.disableBlend();
+        }
     }
 
     public static void renderEntityHighlight(Entity entity, Vector4f color, WorldRenderContext worldContext) {
@@ -58,40 +60,41 @@ public class SpecialRenderer {
     }
 
     public static void renderBlockHighlight(BlockPos pos, Vector4f color, WorldRenderContext worldContext) {
-        FullContext context = setupContext(worldContext, pos);
-        // Box box = new Box(-0.5d, 0, -0.5d, 0.5d, 1, 0.5d);
-
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -0.5d, 0, -0.5d, 0.5d, 1, 0.5d, color.x, color.y, color.z, color.w);
-        finishRendering(context);
+//        FullContext context = setupContext(worldContext, pos);
+//
+//        VertexRendering.drawFilledBox(context.matrices, context.bufferBuilder, -0.05d, 0d, -0.05d, 0.05d, 0.1d, 0.05d, color.x, color.y, color.z, color.w);
+//
+//        finishRendering(context);
     }
 
     public static void renderPositionHighlight(Vec3d pos, Vector4f color, WorldRenderContext worldContext) {
-        FullContext context = setupContext(worldContext, pos);
-
-        context.matrices.translate(0F, -0.05F, 0F);
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -0.05d, 0d, -0.05d, 0.05d, 0.1d, 0.05d, color.x, color.y, color.z, color.w);
-        finishRendering(context);
+//        FullContext context = setupContext(worldContext, pos);
+//
+//        context.matrices.translate(0F, -0.05F, 0F);
+////        DebugRenderer.drawBox(context.matrices, worldContext.consumers(), -0.05d, 0d, -0.05d, 0.05d, 0.1d, 0.05d, color.x, color.y, color.z, color.w);
+//        VertexRendering.drawFilledBox(context.matrices, context.bufferBuilder, -0.05d, 0d, -0.05d, 0.05d, 0.1d, 0.05d, color.x, color.y, color.z, color.w);
+//        finishRendering(context);
     }
 
     public static void interactionHighlight(InteractionEntity interaction, Vector4f color, WorldRenderContext worldContext) {
-        FullContext context = setupContext(worldContext, interaction);
-        Box box = interaction.getBoundingBox();
-
-        //                   getLengthX
-        double halfX = (box.maxX - box.minX) / 2;
-        //                   getLengthZ
-        double halfZ = (box.maxZ - box.minZ) / 2;
-
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -halfX, 0, -halfZ, halfX, box.maxY - box.minY, halfZ, color.x, color.y, color.z, color.w);
-        finishRendering(context);
+//        FullContext context = setupContext(worldContext, interaction);
+//        Box box = interaction.getBoundingBox();
+//
+//        //                   getLengthX
+//        double halfX = (box.maxX - box.minX) / 2;
+//        //                   getLengthZ
+//        double halfZ = (box.maxZ - box.minZ) / 2;
+//
+//        VertexRendering.drawFilledBox(context.matrices, context.bufferBuilder, -0.05d, 0d, -0.05d, 0.05d, 0.1d, 0.05d, color.x, color.y, color.z, color.w);
+//        finishRendering(context);
     }
 
     public static void displayEntityHighlight(DisplayEntity interaction, Vector4f color, WorldRenderContext worldContext) {
-        FullContext context = setupContext(worldContext, interaction);
-
-        context.matrices.translate(0F, -0.2F, 0F);
-        WorldRenderer.renderFilledBox(context.matrices, context.bufferBuilder, -0.2d, 0d, -0.2d, 0.2d, 0.4d, 0.2d, color.x, color.y, color.z, color.w);
-
-        finishRendering(context);
+//        FullContext context = setupContext(worldContext, interaction);
+//
+//        context.matrices.translate(0F, -0.2F, 0F);
+//        VertexRendering.drawBox(context.matrices, context.bufferBuilder, -0.2d, 0d, -0.2d, 0.2d, 0.4d, 0.2d, color.x, color.y, color.z, color.w);
+//
+//        finishRendering(context);
     }
 }

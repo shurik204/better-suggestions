@@ -9,6 +9,7 @@
     "ChatScreenMixin",
     "ClientCommandSourceMixin",
     "ClientPlayNetworkHandlerMixin",
+    "EntityRenderDispatcherMixin",
     "EntityRendererMixin",
     "LanguageManagerMixin",
     "MinecraftClientMixin",
