@@ -1,6 +1,7 @@
 package me.shurik.bettersuggestions.client.mixin;
 
 import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
+import me.shurik.bettersuggestions.client.render.SpecialRendererQueue;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -8,7 +9,6 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
@@ -17,6 +17,7 @@ import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.decoration.InteractionEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Final;
@@ -47,11 +48,13 @@ public abstract class EntityRenderDispatcherMixin {
                         suggestions$renderItem(Items.STRUCTURE_VOID.getDefaultStack(), light, matrices, vertexConsumers, entity);
                 case AreaEffectCloudEntity aec ->
                         suggestions$renderItem(Items.LINGERING_POTION.getDefaultStack(), light, matrices, vertexConsumers, entity);
-                case InteractionEntity interaction -> suggestions$renderItem(Items.PISTON.getDefaultStack(), light, matrices, vertexConsumers, entity);
-                case DisplayEntity display -> suggestions$renderItem(Items.ITEM_FRAME.getDefaultStack(), light, matrices, vertexConsumers, entity);
-                // TODO: properly fix rendering
-                // case DisplayEntity display -> SpecialRendererQueue.addEntity(entity);
-                // case InteractionEntity interaction -> SpecialRendererQueue.addEntity(entity);
+                case DisplayEntity display ->
+                        SpecialRendererQueue.addEntity(entity);
+                case InteractionEntity interaction ->
+                        SpecialRendererQueue.addEntity(entity);
+                // In case the proper renderer is broken:
+                // case InteractionEntity interaction -> suggestions$renderItem(Items.PISTON.getDefaultStack(), light, matrices, vertexConsumers, entity);
+                // case DisplayEntity display -> suggestions$renderItem(Items.ITEM_FRAME.getDefaultStack(), light, matrices, vertexConsumers, entity);
                 default -> {}
             }
         }

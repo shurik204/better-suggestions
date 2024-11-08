@@ -11,7 +11,7 @@ public class MarkerEntityRenderer extends EntityRenderer<MarkerEntity, MarkerEnt
     }
 
     @Override
-    public MarkerEntityRenderState getRenderState() {
+    public MarkerEntityRenderState createRenderState() {
         return MarkerEntityRenderState.INSTANCE;
     }
 }
