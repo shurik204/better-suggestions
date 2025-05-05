@@ -1,6 +1,6 @@
 
 plugins {
-	id("fabric-loom") version "1.6-SNAPSHOT" // Fabric Loom
+	id("fabric-loom") version "1.11-SNAPSHOT" // Fabric Loom
 	id("io.github.p03w.machete") version "1.1.4" // Build jar compression
 	id("me.modmuss50.mod-publish-plugin") version "0.4.5" // Mod publishing
 
@@ -141,33 +141,34 @@ tasks {
 		}
 	}
 
-	publishing {
-		publications {
-			create<MavenPublication>("jar") {
-				repositories {
-					maven(System.getenv("MAVEN_URL")) {
-						credentials {
-							username=System.getenv("MAVEN_USER")
-							password=System.getenv("MAVEN_PASSWORD")
-						}
-					}
-				}
-				groupId = group
-				artifactId = modId
+    publishing {
+        if (System.getenv("MAVEN_URL") != null) {
+            publications {
+                create<MavenPublication>("jar") {
+                    repositories {
+                        maven(System.getenv("MAVEN_URL")) {         // Maven repository URL
+                            credentials {
+                                username=System.getenv("MAVEN_USER")
+                                password=System.getenv("MAVEN_PASSWORD")
+                            }
+                        }
+                    }
+                    groupId = group
+                    artifactId = modId
 
-				// Includes jar, sources and dependencies
-				from(project.components["java"])
-			}
-		}
-	}
+                    // Includes jar, sources and dependencies
+                    from(project.components["java"])
+                }
+            }
+        } else {
+            logger.warn("[!] Maven URL is not set, skipped setting up Maven publishing.")
+        }
+    }
 
 	// Fix machete compression
-	getAllTasks(true).forEach {
-		for (task in it.value) {
-			// All publishing tasks depend on the remapJar task. But also metadata generation.
-			if (task.name.startsWith("publish") || task.name == "generateMetadataFileForJarPublication") {
-				task.dependsOn("optimizeOutputsOfRemapJar")
-			}
-		}
-	}
+    configureEach {
+        if (name.startsWith("publish") || name == "generateMetadataFileForJarPublication") {
+            dependsOn("optimizeOutputsOfRemapJar")
+        }
+    }
 }
