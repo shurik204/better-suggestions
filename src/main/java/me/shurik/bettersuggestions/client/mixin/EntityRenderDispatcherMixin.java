@@ -37,7 +37,8 @@ public abstract class EntityRenderDispatcherMixin {
 
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     private <E extends Entity> void shouldRender(E entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> info) {
-        if (entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity || entity instanceof DisplayEntity) {
+        //                                                                                                             Only ignore display entity view range when highlighted (fixes #16)
+        if (entity instanceof AreaEffectCloudEntity || (entity instanceof DisplayEntity && ((ClientEntityDataAccessor)entity).isHighlighted())) {
             info.setReturnValue(true);
         }
     }
