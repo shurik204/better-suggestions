@@ -1,6 +1,6 @@
 
 plugins {
-	id("fabric-loom") version "1.7-SNAPSHOT" // Fabric Loom
+	id("fabric-loom") version "1.10-SNAPSHOT" // Fabric Loom
 	id("io.github.p03w.machete") version "1.1.4" // Build jar compression
 	id("me.modmuss50.mod-publish-plugin") version "0.4.5" // Mod publishing
 
@@ -12,8 +12,8 @@ plugins {
 fun property(name: String): String = project.properties[name].toString()
 fun fabricApiModule(name: String, version: String? = null): Dependency {
 	if (version == null) {
-				return fabricApi.module(name, (project.findProperty("deps.fabricApi") ?: throw IllegalArgumentException("Fabric API version (deps.fabricApi) is not set")).toString())
-	}
+		return fabricApi.module(name, (project.findProperty("deps.fabricApi") ?: throw IllegalArgumentException("Fabric API version (deps.fabricApi) is not set")).toString())
+    }
 	return fabricApi.module(name, version)
 }
 //////
@@ -73,7 +73,8 @@ dependencies {
 	modImplementation(fabricApiModule("fabric-rendering-v1"))
 
 	// Other mods might need different modules
-	modRuntimeOnly(fabricApiModule("fabric-api"))
+	// modRuntimeOnly(fabricApiModule("fabric-api"))
+	modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:${property("deps.fabricApi")}")
 
 	modApi("com.terraformersmc:modmenu:${property("deps.modMenu")}")
 

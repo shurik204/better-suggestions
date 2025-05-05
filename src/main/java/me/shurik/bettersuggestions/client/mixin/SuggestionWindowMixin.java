@@ -44,6 +44,8 @@ import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 @Mixin(value = SuggestionWindow.class, priority = 1001)
 //                                                1001 - fix incompatibility with Figura mod
 public class SuggestionWindowMixin {
+    private static final LiteralMessage PLACEHOLDER_MESSAGE = new LiteralMessage("PLACEHOLDER");
+
     @Shadow
     private int inWindowIndex;
 
@@ -158,7 +160,7 @@ public class SuggestionWindowMixin {
     Message ifBlockTooltipManipulation(Suggestion suggestion) {
         // If there's custom tooltip, return placeholder to make sure the if block succeeds
         if (!((CustomSuggestionAccessor) suggestion).getMultilineTooltip().isEmpty()) {
-            return new LiteralMessage("placeholder");
+            return PLACEHOLDER_MESSAGE; // Avoid creating a new LiteralMessage every time
         } else {
             // Otherwise, return the original tooltip
             return suggestion.getTooltip();

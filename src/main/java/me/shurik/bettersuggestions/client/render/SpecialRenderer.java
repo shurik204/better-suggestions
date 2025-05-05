@@ -1,32 +1,45 @@
 package me.shurik.bettersuggestions.client.render;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.decoration.InteractionEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector4f;
 
-import static net.minecraft.client.render.RenderPhase.*;
+import java.util.OptionalDouble;
+import java.util.function.Function;
+
+import static net.minecraft.client.render.RenderPhase.NO_LAYERING;
 
 public class SpecialRenderer {
-    private static final RenderLayer RENDER_LAYER = RenderLayer.of("better_suggestions_highlight",
-            VertexFormats.POSITION_COLOR,
-            VertexFormat.DrawMode.TRIANGLE_STRIP,
+    public static final RenderPipeline RENDER_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.POSITION_COLOR_SNIPPET)
+                    .withLocation("pipeline/debug_filled_box")
+                    .withCull(false)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withVertexFormat(VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.TRIANGLE_STRIP)
+                    .build()
+    );
+    private static final RenderLayer.MultiPhase RENDER_LAYER = RenderLayer.of(
+            "better_suggestions_highlight",
             1536,
             false,
             true,
+            RENDER_PIPELINE,
             RenderLayer.MultiPhaseParameters.builder()
-                    // Don't need a texture, only color
-                    .program(POSITION_COLOR_PROGRAM)
-                    // The highlights are translucent
-                    .transparency(TRANSLUCENT_TRANSPARENCY)
-                    // Render above everything else
-                    .depthTest(ALWAYS_DEPTH_TEST)
-                    .build(false));
+                    .layering(NO_LAYERING)
+                    .build(false)
+    );
 
     private static VertexConsumer setupRendering(WorldRenderContext context, BlockPos pos) { return setupRendering(context, Vec3d.ofBottomCenter(pos)); }
     private static VertexConsumer setupRendering(WorldRenderContext context, Entity entity) { return setupRendering(context, entity.getPos()); }
