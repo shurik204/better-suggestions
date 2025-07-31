@@ -1,5 +1,6 @@
 package me.shurik.bettersuggestions.client.mixin;
 
+import me.shurik.bettersuggestions.client.access.ClientEntityDataAccessor;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.AreaEffectCloudEntity;
@@ -28,7 +29,7 @@ public class EntityRendererMixin<T extends Entity> {
     // public boolean shouldRender(T entity, Frustum frustum, double x, double y, double z)
     @Inject(method = "shouldRender", at = @At("HEAD"), cancellable = true)
     void shouldRender(T entity, Frustum frustum, double x, double y, double z, CallbackInfoReturnable<Boolean> info) {
-        if (entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity) {
+        if ((entity instanceof MarkerEntity || entity instanceof AreaEffectCloudEntity) && ((ClientEntityDataAccessor) entity).isHighlighted()) {
             info.setReturnValue(true);
         }
     }
