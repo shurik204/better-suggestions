@@ -34,6 +34,9 @@ public class ConfigStore implements ConfigData {
     @ConfigEntry.Gui.Tooltip(count = 2)
     public boolean rememberCommandOnEscape = false;
 
+    @ConfigEntry.Gui.Tooltip(count = 2)
+    public boolean addWhitespaceOnMouseCompletion = false;
+
     // Wish there was an option to make lists expanded by default :pensive:
     public List<String> prioritizedSuggestions;
 }

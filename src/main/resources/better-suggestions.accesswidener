@@ -8,3 +8,4 @@ mutable field net/minecraft/client/gui/screen/ChatInputSuggestor maxSuggestionSi
 accessible field net/minecraft/client/gui/screen/ChatScreen chatField Lnet/minecraft/client/gui/widget/TextFieldWidget;
 accessible field net/minecraft/scoreboard/Scoreboard scores Ljava/util/Map;
 accessible class net/minecraft/scoreboard/Scores
+accessible field net/minecraft/client/gui/screen/ChatInputSuggestor completingSuggestions Z

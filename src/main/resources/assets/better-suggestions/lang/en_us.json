@@ -31,6 +31,9 @@
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape": "Remember chat command",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[0]": "Restores command after closing chat with escape",
     "text.autoconfig.better-suggestions.option.rememberCommandOnEscape.@Tooltip[1]": "(Use Shift + Escape to temporarily disable)",
+    "text.autoconfig.better-suggestions.option.addWhitespaceOnMouseCompletion": "Add whitespace when completing with mouse",
+    "text.autoconfig.better-suggestions.option.addWhitespaceOnMouseCompletion.@Tooltip[0]": "When clicking a suggestion with the mouse",
+    "text.autoconfig.better-suggestions.option.addWhitespaceOnMouseCompletion.@Tooltip[1]": "adds a whitespace after the suggestion",
     "text.autoconfig.better-suggestions.option.prioritizedSuggestions": "Prioritized suggestions",
 
     "text.autoconfig.better-suggestions.option.entitySuggestions.suggestEntitySelector": "Suggest entity selector when looking at an entity",
@@ -55,6 +58,6 @@
     "text.autoconfig.better-suggestions.option.functionSuggestions.hideUnderscoreFunctions.@Tooltip[2]": "meant to invoke manually.",
 
     "text.autoconfig.better-suggestions.option.server.requireOpToRequestData": "Require OP to request data",
-    "text.autoconfig.better-suggestions.option.server.requireOpToRequestData.@Tooltip[0]": "(If enabled players without OP will not be able to",
-    "text.autoconfig.better-suggestions.option.server.requireOpToRequestData.@Tooltip[1]": "request tags, entity scores, etc. from the server)"
+    "text.autoconfig.better-suggestions.option.server.requireOpToRequestData.@Tooltip[0]": "If enabled players without OP will not be able to",
+    "text.autoconfig.better-suggestions.option.server.requireOpToRequestData.@Tooltip[1]": "request tags, entity scores, etc. from the server"
 }

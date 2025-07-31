@@ -44,35 +44,30 @@ import static me.shurik.bettersuggestions.ModConstants.CONFIG;
 @Mixin(value = SuggestionWindow.class, priority = 1001)
 //                                                1001 - fix incompatibility with Figura mod
 public class SuggestionWindowMixin {
+    @Shadow @Final ChatInputSuggestor field_21615;
+    @Unique
     private static final LiteralMessage PLACEHOLDER_MESSAGE = new LiteralMessage("PLACEHOLDER");
 
-    @Shadow
-    private int inWindowIndex;
+    @Shadow private int inWindowIndex;
 
-    @Shadow
-    @Final
-    private Rect2i area;
-    
-    @Shadow
-    @Final
-    private List<Suggestion> suggestions;
-    
-    @Shadow
-    private int selection;
+    @Shadow @Final private Rect2i area;
 
-    @Shadow
-    private boolean completed;
+    @Shadow @Final private List<Suggestion> suggestions;
 
-    @Unique
-    private TextRenderer suggestions$textRenderer;
-    @Unique
-    private boolean suggestions$renderShiftTooltip;
+    @Shadow private int selection;
+
+    @Shadow private boolean completed;
+
+    @Unique private TextRenderer suggestions$textRenderer;
+    @Unique private boolean suggestions$renderShiftTooltip;
+
+    @Unique private boolean isMouseCompletion;
 
     @Inject(at = @At("TAIL"), method = "<init>")
     void init(ChatInputSuggestor suggestor, int x, int y, int width, List<Suggestion> suggestions, boolean narrateFirstSuggestion, CallbackInfo info) {
         ChatInputSuggestorAccessorMixin suggestorAccessor = (ChatInputSuggestorAccessorMixin) suggestor;
         this.suggestions$textRenderer = suggestorAccessor.getTextRenderer();
-        
+
         // TODO: add color customization for chat and cmd block input
         // suggestor.owner instanceof ChatScreen and suggestor.owner instanceof AbstractCommandBlockScreen
         // if (suggestorAccessor.getOwner() instanceof ChatScreen) {
@@ -87,10 +82,10 @@ public class SuggestionWindowMixin {
         ArrayList<Suggestion> otherSuggestions = new ArrayList<>();
 
         int inputLength = suggestorAccessor.getTextField().getText().length();
-        
+
         Entity crosshairTarget = ClientUtils.getCrosshairTargetEntity();
         String crosshairTargetUuid = crosshairTarget != null ? crosshairTarget.getUuidAsString() : null;
-        
+
         // Sort all entity UUIDs to be displayed first
         for (Suggestion suggestion : suggestions) {
             CustomSuggestionAccessor customSuggestion = (CustomSuggestionAccessor) suggestion;
@@ -101,7 +96,7 @@ public class SuggestionWindowMixin {
                 prioritizedSuggestions.add(suggestion);
             }
             // then entity UUIDs
-            // (with the exception of the crosshair target, it will always be put first)
+            // (except the crosshair target, it will always be put first)
             else if (customSuggestion.isEntitySuggestion()) {
 
                 // If the crosshair target exists and is the same as the suggestion, put it as first
@@ -121,7 +116,7 @@ public class SuggestionWindowMixin {
                 otherSuggestions.add(suggestion);
             }
         }
-        
+
         this.suggestions.clear();
         this.suggestions.addAll(prioritizedSuggestions);
         this.suggestions.addAll(otherSuggestions);
@@ -222,6 +217,29 @@ public class SuggestionWindowMixin {
             this.completed = false;
             info.setReturnValue(true);
         }
+    }
+
+    @Inject(method = "mouseClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatInputSuggestor$SuggestionWindow;select(I)V", ordinal = 0, shift = At.Shift.AFTER))
+    private void markMouseClickCompletion(CallbackInfoReturnable<Boolean> cir) {
+        this.isMouseCompletion = true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Redirect(method = "complete", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;", ordinal = 0))
+    private <E> E modifySuggestionIfNeeded(List<E> list, int index) {
+        if (this.isMouseCompletion && CONFIG.addWhitespaceOnMouseCompletion && list.get(index) instanceof Suggestion suggestion) {
+            return (E) new Suggestion(
+                    suggestion.getRange(),
+                suggestion.getText() + " "
+            );
+        }
+        return list.get(index);
+    }
+
+    @Inject(method = "complete", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/suggestion/Suggestion;apply(Ljava/lang/String;)Ljava/lang/String;", ordinal = 0, shift = At.Shift.AFTER, remap = false))
+    private void removeCompletingSuggestionFlag(CallbackInfo ci) {
+        this.field_21615.completingSuggestions = !this.isMouseCompletion;
+        this.isMouseCompletion = false;
     }
 
     @Shadow
