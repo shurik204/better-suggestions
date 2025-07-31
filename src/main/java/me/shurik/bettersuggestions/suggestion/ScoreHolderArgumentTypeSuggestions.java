@@ -20,7 +20,7 @@ public class ScoreHolderArgumentTypeSuggestions {
             if (source instanceof CommandSource commandSource) {
                 StringReader reader = new StringReader(builder.getInput());
                 reader.setCursor(builder.getStart());
-                EntitySelectorReader entitySelectorReader = new EntitySelectorReader(reader, commandSource.hasPermissionLevel(2));
+                EntitySelectorReader entitySelectorReader = new EntitySelectorReader(reader, EntitySelectorReader.shouldAllowAtSelectors(commandSource));
                 try {
                     entitySelectorReader.read();
                 } catch (CommandSyntaxException e) {

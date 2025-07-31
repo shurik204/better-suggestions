@@ -19,10 +19,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -31,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.shurik.bettersuggestions.ModConstants.CONFIG;
@@ -41,6 +39,7 @@ import static me.shurik.bettersuggestions.ModConstants.CONFIG;
  * Highlight entities from suggestions
  * Sort suggestions
  */
+@Debug(export = true)
 @Mixin(value = SuggestionWindow.class, priority = 1001)
 //                                                1001 - fix incompatibility with Figura mod
 public class SuggestionWindowMixin {
@@ -77,7 +76,16 @@ public class SuggestionWindowMixin {
         // } else {
         //     this.color = 0xFFFFFF;
         // }
-        
+
+        // Try modifying the suggestions list
+        try {
+            // https://stackoverflow.com/questions/8364856/how-to-test-if-a-list-extends-object-is-an-unmodifablelist
+            this.suggestions.addAll(Collections.emptyList());
+        } catch (UnsupportedOperationException e) {
+            // Silently exit if the list is unmodifiable
+            return;
+        }
+
         ArrayList<Suggestion> prioritizedSuggestions = new ArrayList<>();
         ArrayList<Suggestion> otherSuggestions = new ArrayList<>();
 
@@ -123,7 +131,6 @@ public class SuggestionWindowMixin {
         select(0);
     }
 
-    
     @Nullable
     @Unique
     private CustomSuggestionAccessor customCurrentSuggestion;
@@ -143,10 +150,11 @@ public class SuggestionWindowMixin {
     }
 
     // context.drawTextWithShadow(ChatInputSuggestor.this.textRenderer, suggestion.getText() ...
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I", ordinal = 0))
-    int drawFormattedTextWithShadow(DrawContext context, TextRenderer textRenderer, String __, int x, int y, int color) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V", ordinal = 0))
+    void drawFormattedTextWithShadow(DrawContext context, TextRenderer textRenderer, String __, int x, int y, int color) {
+        assert customCurrentSuggestion != null;
         // Draw as multiline tooltip instead
-        return context.drawTextWithShadow(textRenderer, customCurrentSuggestion.getFormattedText(), x, y, color);
+        context.drawTextWithShadow(textRenderer, customCurrentSuggestion.getFormattedText(), x, y, color);
     }
 
     //                                                                           \/

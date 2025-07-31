@@ -32,7 +32,7 @@ public class ServerPacketHandler {
         ServerPlayerEntity player = context.player();
         if (hasPermissions(player)) {
             int entityId = packet.entityId();
-            Entity entity = player.getServerWorld().getEntityById(entityId);
+            Entity entity = player.getWorld().getEntityById(entityId);
             if (entity != null) {
                 ServerPacketSender.sendEntityCommandTagsResponse(player, entityId, entity.getCommandTags());
             }
@@ -43,7 +43,7 @@ public class ServerPacketHandler {
         ServerPlayerEntity player = context.player();
         if (hasPermissions(player)) {
             int entityId = packet.entityId();
-            Entity entity = player.getServerWorld().getEntityById(entityId);
+            Entity entity = player.getWorld().getEntityById(entityId);
             if (entity != null) {
                 ServerPacketSender.sendEntityScoresResponse(player, entityId, Scoreboards.getScores(entity.getNameForScoreboard()));
             }

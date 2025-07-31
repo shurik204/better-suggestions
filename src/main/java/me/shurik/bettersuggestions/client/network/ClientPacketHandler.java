@@ -9,6 +9,8 @@ import me.shurik.bettersuggestions.network.packet.EntityScoresResponseS2CPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Entity;
 
+import java.util.Objects;
+
 public class ClientPacketHandler {
     public static void init() {
         ClientPlayNetworking.registerGlobalReceiver(EntityCommandTagsResponseS2CPacket.ID, ClientPacketHandler::receiveEntityCommandTagsUpdate);
@@ -20,10 +22,10 @@ public class ClientPacketHandler {
         // Remove from pending requests
         ClientDataGetter.pendingTagRequests.remove(entityId);
         // Get entity
-        Entity entity = context.client().world.getEntityById(entityId);
+        Entity entity = Objects.requireNonNull(context.client().world).getEntityById(entityId);
         if (entity == null) {
             if (ModConstants.DEBUG) {
-                Client.LOGGER.warn("Received tag list for an unknown entity with ID " + entityId);
+                Client.LOGGER.warn("Received tag list for an unknown entity with ID {}", entityId);
             }
             return;
         }
@@ -36,10 +38,10 @@ public class ClientPacketHandler {
         // Remove from pending requests
         ClientDataGetter.pendingScoreRequests.remove(entityId);
         // Get entity
-        Entity entity = context.client().world.getEntityById(entityId);
+        Entity entity = Objects.requireNonNull(context.client().world).getEntityById(entityId);
         if (entity == null) {
             if (ModConstants.DEBUG) {
-                Client.LOGGER.warn("Received score list for an unknown entity with ID " + entityId);
+                Client.LOGGER.warn("Received score list for an unknown entity with ID {}", entityId);
             }
             return;
         }

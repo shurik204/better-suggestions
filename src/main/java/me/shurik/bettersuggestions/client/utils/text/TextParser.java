@@ -1,3 +1,4 @@
+/*
 package me.shurik.bettersuggestions.client.utils.text;
 
 import com.google.gson.*;
@@ -201,3 +202,4 @@ public class TextParser {
         };
     }
 }
+*/

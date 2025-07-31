@@ -1,3 +1,4 @@
+/*
 package me.shurik.bettersuggestions.client.suggestion;
 
 import com.mojang.brigadier.context.CommandContext;
@@ -33,7 +34,7 @@ public class TextArgumentSuggestions {
             suggestOpenNew(builder, input);
             return builder.buildFuture();
         }
-        
+
         CompletionsContainer<TextCompletion> completions = TextParser.getCompletions(input, context, builder);
         if (completions != null) {
             builder = builder.createOffset(builder.getStart() + builder.getRemaining().length() - completions.getOffset());
@@ -41,7 +42,8 @@ public class TextArgumentSuggestions {
                 suggest(builder, completion);
             }
         }
-        
+
         return builder.buildFuture();
     }
 }
+*/

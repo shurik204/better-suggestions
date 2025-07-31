@@ -106,4 +106,84 @@ public class SpecialRenderer {
 
         finishRendering(worldContext);
     }
+
+    public static final RenderPipeline TRACER_PIPELINE = RenderPipelines.register(RenderPipeline.builder(RenderPipelines.RENDERTYPE_LINES_SNIPPET).withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST).withCull(false).withLocation("pipeline/lines").build());
+    private static final Function<Double, RenderLayer.MultiPhase> TRACER_LINE = Util.memoize(
+            double_ -> RenderLayer.of(
+                    "better_suggestions_highlight",
+                    1536,
+                    TRACER_PIPELINE,
+                    RenderLayer.MultiPhaseParameters.builder().lineWidth(new RenderPhase.LineWidth(OptionalDouble.of(double_))).build(false)
+            )
+    );
+    public static void renderTracer(Entity entity, Vector4f color, WorldRenderContext worldContext) {
+        // Get camera position (player's view)
+        Camera camera = worldContext.camera();
+        Vec3d cameraPos = camera.getPos();
+
+        // Get entity position (typically using the center or eye level)
+        Vec3d entityPos = entity.getPos().add(0, entity.getHeight() / 2, 0);
+
+        // Setup rendering without translation since we'll specify absolute coordinates
+        worldContext.matrixStack().push();
+        VertexConsumer consumer = worldContext.consumers().getBuffer(TRACER_LINE.apply(8d));
+
+        // Draw a line from camera to entity (in world space)
+        drawLine(
+                worldContext.matrixStack(),
+                consumer,
+                0, 0, 0,  // Start at camera (local origin)
+                entityPos.x - cameraPos.x,
+                entityPos.y - cameraPos.y,
+                entityPos.z - cameraPos.z,  // End at entity (relative to camera)
+                color.x, color.y, color.z, color.w
+        );
+
+        worldContext.matrixStack().pop();
+    }
+
+    public static void drawLine(MatrixStack matrices, VertexConsumer vertices,
+                                double startX, double startY, double startZ,
+                                double endX, double endY, double endZ,
+                                float r, float gr, float b, float a) {
+        MatrixStack.Entry matrixEntry = matrices.peek();
+
+        // Test
+//        VertexRendering.drawBox(matrices, vertices, startX, startY, startZ, endX, endY, endZ, r, g, b, a);
+
+        float sX = (float)startX;
+        float sY = (float)startY;
+        float sZ = (float)startZ;
+        float eX = (float)endX;
+        float eY = (float)endY;
+        float eZ = (float)endZ;
+
+        // Draw a line from start to end
+//        vertices.vertex(matrixEntry, eX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+//        vertices.vertex(matrixEntry, sX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+//        vertices.vertex(matrixEntry, eX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, -1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, -1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+//        vertices.vertex(matrixEntry, sX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+//        vertices.vertex(matrixEntry, sX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, -1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, -1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, sX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, -1.0F);
+//        vertices.vertex(matrixEntry, eX, sY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, -1.0F);
+//        vertices.vertex(matrixEntry, sX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 1.0F, 0.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, sY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 1.0F, 0.0F);
+//        vertices.vertex(matrixEntry, eX, eY, sZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+//        vertices.vertex(matrixEntry, eX, eY, eZ).color(r, gr, b, a).normal(matrixEntry, 0.0F, 0.0F, 1.0F);
+    }
 }
